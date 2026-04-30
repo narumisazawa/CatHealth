@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #EA5EAD;
+  --color-primary-subtle: #FFF0F5;
+  --color-surface-bg: #F7F7F7;
+  --color-surface-card: #FFFFFF;
+  --color-neutral-main: #111827;
+  --color-neutral-body: #374151;
+  --color-neutral-muted: #9CA3AF;
+  --color-error: #EF4444;
+
+  --spacing-page: 16px;
+  --spacing-tight: 8px;
+  --spacing-wide: 24px;
+
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-pill: 999px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: #F7F7F7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: #F7F7F7;
+  position: relative;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9CA3AF;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Daily スクロールエリア用スクロールバー */
+.daily-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.daily-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.daily-scroll::-webkit-scrollbar-thumb {
+  background: #D4D1CA;
+  border-radius: 999px;
+}
+.daily-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #D4D1CA transparent;
+}
