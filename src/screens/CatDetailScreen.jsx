@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import CatFormModal              from '../components/CatFormModal.jsx'
 import DailyHospitalSheet        from '../components/DailyHospitalSheet.jsx'
 import HospitalVisitDetailScreen from './HospitalVisitDetailScreen.jsx'
@@ -201,6 +201,177 @@ function importCatDataIcs(text, cat) {
 // ── アイコン定数 ──────────────────────────────────────
 const TYPE_LABEL = { weight:'体重', poop:'うんち', pee:'おしっこ', vomit:'ゲロ', hospital:'通院記録' }
 const TYPE_ICON  = { weight:weightSvg, poop:poopSvg, pee:peeSvg, vomit:vomitSvg, hospital:hospitalSvg }
+
+// ── WeightGraph ───────────────────────────────────────
+function WeightGraph({ catId, dataKey }) {
+  const containerRef = useRef(null)
+  const [containerW, setContainerW] = useState(340)
+
+  const PAD_L = 42, PAD_R = 12, PAD_T = 8, PAD_B = 46
+  const PLOT_H = 130
+  const MIN_MONTH_W = 28 // 1ヶ月あたりの最小幅(px)
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerW(containerRef.current.clientWidth - 24)
+    }
+  }, [])
+
+  const pts = useMemo(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(LS_WEIGHT) || '[]')
+      return raw
+        .filter(r => String(r.catId) === String(catId) && parseFloat(r.weight) > 0)
+        .map(r => ({ date: r.date, w: parseFloat(r.weight) }))
+        .filter(r => !isNaN(r.w) && r.date)
+        .sort((a, b) => a.date.localeCompare(b.date))
+    } catch (e) {
+      return []
+    }
+  }, [catId, dataKey]) // eslint-disable-line
+
+  if (pts.length < 2) return null
+
+  // 最初〜最後の月を全列挙
+  const allMonths = []
+  const addMonth = (ym, endYm) => {
+    let cur = ym
+    while (cur <= endYm) {
+      allMonths.push(cur)
+      const [y, m] = cur.split('-').map(Number)
+      cur = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, '0')}`
+    }
+  }
+  addMonth(pts[0].date.slice(0, 7), pts[pts.length - 1].date.slice(0, 7))
+
+  const svgH = PAD_T + PLOT_H + PAD_B
+
+  const minW = Math.min(...pts.map(p => p.w))
+  const maxW = Math.max(...pts.map(p => p.w))
+  const rawRange = maxW - minW
+
+  const step = rawRange < 0.3 ? 0.1 : rawRange < 0.8 ? 0.2 : rawRange < 2 ? 0.5 : 1
+  const yMin = Math.round(Math.floor((minW - step) / step) * step * 10) / 10
+  const yMax = Math.round(Math.ceil((maxW + step)  / step) * step * 10) / 10
+  const yRange = yMax - yMin
+
+  const gridVals = []
+  for (let v = yMin; v <= yMax + 0.0001; v = Math.round((v + step) * 10) / 10) {
+    gridVals.push(v)
+  }
+
+  const yOf = w => PAD_T + PLOT_H - ((w - yMin) / yRange) * PLOT_H
+
+  const plotAreaW = containerW - PAD_L
+  const plotSvgW = Math.max(allMonths.length * MIN_MONTH_W, plotAreaW)
+
+  // xOf: 月キー 'YYYY-MM' → X座標（月の中心位置）
+  const totalMonthSpan = allMonths.length - 1
+  const xOfMonth = mk => {
+    const idx = allMonths.indexOf(mk)
+    return totalMonthSpan === 0 ? (plotSvgW - PAD_R) / 2 : (idx / totalMonthSpan) * (plotSvgW - PAD_R)
+  }
+
+  // 月内の複数データを横にずらす
+  const slotW = totalMonthSpan === 0 ? plotSvgW : (plotSvgW - PAD_R) / totalMonthSpan
+  const monthGroups = {}
+  pts.forEach((p, i) => {
+    const mk = p.date.slice(0, 7)
+    if (!monthGroups[mk]) monthGroups[mk] = []
+    monthGroups[mk].push(i)
+  })
+
+  const svgPts = pts.map((p, i) => {
+    const mk = p.date.slice(0, 7)
+    const group = monthGroups[mk]
+    const posInGroup = group.indexOf(i)
+    const N = group.length
+    const baseX = xOfMonth(mk)
+    const spread = N > 1 ? Math.min((N - 1) * 8, slotW * 0.6) : 0
+    const offset = N === 1 ? 0 : (posInGroup / (N - 1) - 0.5) * spread
+    return { ...p, x: baseX + offset, y: yOf(p.w) }
+  })
+
+  // 折れ線：全点を連続してつなぐ
+  const polylinePath = svgPts
+    .map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+    .join(' ')
+
+  // X軸ラベル：全月を対象に近すぎる場合はスキップ
+  const xLabels = []
+  const seenYears = new Set()
+  for (const mk of allMonths) {
+    const [y, m] = mk.split('-')
+    const x = xOfMonth(mk)
+    if (xLabels.length > 0 && x - xLabels[xLabels.length - 1].x < 24) continue
+    const isFirstYear = !seenYears.has(y)
+    if (isFirstYear) seenYears.add(y)
+    xLabels.push({ x, label: `${Number(m)}月`, year: y, isFirstYear })
+  }
+
+  return (
+    <div ref={containerRef} style={{ background: '#FFFFFF', borderRadius: 12, padding: '12px 12px 4px' }}>
+      <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginBottom: 8 }}>体重</div>
+      <div style={{ display: 'flex' }}>
+        {/* Y軸ラベル（固定） */}
+        <svg width={PAD_L} height={svgH} style={{ flexShrink: 0, overflow: 'visible' }}>
+          {gridVals.map(val => (
+            <text
+              key={val}
+              x={PAD_L - 4}
+              y={yOf(val) + 4}
+              textAnchor="end"
+              fontSize="10"
+              fill="#374151"
+            >
+              {val.toFixed(1)} kg
+            </text>
+          ))}
+        </svg>
+
+        {/* 横スクロール可能なプロットエリア */}
+        <div className="weight-graph-scroll" style={{ flex: 1, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <svg width={plotSvgW} height={svgH} style={{ display: 'block' }}>
+            {/* グリッドライン */}
+            {gridVals.map(val => {
+              const y = yOf(val)
+              return (
+                <line
+                  key={val}
+                  x1={0} y1={y.toFixed(1)}
+                  x2={plotSvgW} y2={y.toFixed(1)}
+                  stroke="#E5E7EB" strokeWidth="1" strokeDasharray="4 3"
+                />
+              )
+            })}
+
+            {/* 折れ線（途切れあり） */}
+            <path d={polylinePath} fill="none" stroke={PRIMARY} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+
+            {/* データポイント */}
+            {svgPts.map((p, i) => (
+              <circle key={i} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="3" fill={PRIMARY} />
+            ))}
+
+            {/* X軸ラベル（月・年） */}
+            {xLabels.map((lb, i) => (
+              <g key={i}>
+                <text x={lb.x.toFixed(1)} y={PAD_T + PLOT_H + 14} textAnchor="middle" fontSize="10" fill="#000000">
+                  {lb.label}
+                </text>
+                {lb.isFirstYear && (
+                  <text x={lb.x.toFixed(1)} y={PAD_T + PLOT_H + 26} textAnchor="middle" fontSize="8" fontWeight="700" fill="#374151">
+                    {lb.year}
+                  </text>
+                )}
+              </g>
+            ))}
+          </svg>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // ── ChevronRight ──────────────────────────────────────
 function ChevronRight() {
@@ -547,6 +718,9 @@ export default function CatDetailScreen({ cat: initialCat, cats, onBack, onSaveC
         )}
 
         <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+          {/* 体重グラフ */}
+          <WeightGraph catId={cat.id} dataKey={listKey} />
 
           {/* フィルターボタン */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>

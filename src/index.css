@@ -67,3 +67,19 @@ input[type="number"] {
   scrollbar-width: thin;
   scrollbar-color: #D4D1CA transparent;
 }
+
+/* 体重グラフ横スクロールエリア用スクロールバー */
+.weight-graph-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.weight-graph-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.weight-graph-scroll::-webkit-scrollbar-thumb {
+  background: #D4D1CA;
+  border-radius: 999px;
+}
+.weight-graph-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #D4D1CA transparent;
+}
