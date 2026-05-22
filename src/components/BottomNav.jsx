@@ -1,11 +1,24 @@
 // SVGパスは src/assets/icons/ の実ファイルから抽出
-// fill="currentColor" にして color プロパティで色を制御
 
 const TABS = [
   {
+    id: 'cats',
+    label: '猫',
+    icon: () => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12.0001 4.99978C12.6701 4.99978 13.3501 5.08978 14.0001 5.25978C15.7801 3.25978 19.0301 2.41978 20.4201 2.99978C21.8201 3.57978 20.0001 9.99978 20.0001 9.99978C20.5701 11.0698 21.0001 12.2398 21.0001 13.4398C21.0001 17.8998 16.9701 20.9998 12.0001 20.9998C7.03008 20.9998 3.00008 17.9998 3.00008 13.4398C3.00008 12.1898 3.50008 11.0398 4.00008 9.99978C4.00008 9.99978 2.11008 3.57978 3.50008 2.99978C4.89008 2.41978 8.22008 3.22978 10.0001 5.22978C10.6561 5.07888 11.3269 5.00174 12.0001 4.99978Z"
+          stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        />
+        <path d="M8 14V14.5" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M16 14V14.5" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M11.25 16.25H12.75L12 17L11.25 16.25Z" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
     id: 'daily',
-    label: 'Daily',
-    // calendar icon（icons/ に calendar.svg がないためインライン、色は常に固定）
+    label: 'お世話',
     icon: () => (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -18,8 +31,7 @@ const TABS = [
   },
   {
     id: 'foods',
-    label: 'Foods',
-    // src/assets/icons/food.svg のパスを使用（色は常に固定）
+    label: 'フード',
     icon: () => (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -31,8 +43,7 @@ const TABS = [
   },
   {
     id: 'hospital',
-    label: 'Hospital',
-    // src/assets/icons/hospital.svg のパスを使用（色は常に固定）
+    label: '動物病院',
     icon: () => (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -46,58 +57,23 @@ const TABS = [
 ]
 
 export default function BottomNav({ active, onChange }) {
-  // アクティブタブのインデックスから nav 上端の left 位置を計算
-  // 各タブは 1/3 幅。中心 = tabIndex * 33.333% + 16.667%、インジケーター幅 40px なので -20px
+  // 各タブは1/4幅。中心 = tabIndex * 25% + 12.5%、インジケーター幅40pxなので-20px
   const tabIndex = TABS.findIndex(t => t.id === active)
 
   return (
-    <nav style={{
-      position: 'fixed',
-      bottom: 0,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      width: '100%',
-      maxWidth: 430,
-      height: 64,
-      background: '#FFFFFF',
-      borderTop: '1px solid #E5E7EB',
-      display: 'flex',
-      alignItems: 'center',
-    }}>
-      {/* アクティブ上線：nav 上端（top:0）に直接配置 */}
-      <span style={{
-        position: 'absolute',
-        top: 0,
-        left: `calc(${tabIndex} * 33.333% + 16.667% - 20px)`,
-        width: 40,
-        height: 4,
-        background: '#EA5EAD',
-        borderRadius: 999,
-      }} />
-
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] h-16 bg-white border-t border-gray-200 flex items-center">
+      <span
+        className="absolute top-0 w-10 h-1 bg-[#EA5EAD] rounded-full"
+        style={{ left: `calc(${tabIndex} * 25% + 12.5% - 20px)` }}
+      />
       {TABS.map(t => (
         <button
           key={t.id}
           onClick={() => onChange(t.id)}
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 2,
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '6px 0',
-          }}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 bg-transparent border-none cursor-pointer py-1.5"
         >
           {t.icon()}
-          <span style={{
-            fontSize: 10,
-            fontWeight: 500,
-            color: '#374151',
-          }}>
+          <span className="text-[10px] font-medium text-gray-700">
             {t.label}
           </span>
         </button>
