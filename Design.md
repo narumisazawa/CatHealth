@@ -11,7 +11,41 @@
 - **Status-Error**: `#EF4444` (削除、異常値)
 - **Divider**: `#F0F0F0` (区切り線)
 
-## 2. スペーシング・レイアウト (Layout Rules)
+## 2. タイポグラフィ
+
+### テキストスタイル定義
+
+| スタイル名 | サイズ | ウェイト | 色 | 用途 |
+|---|---|---|---|---|
+| Title-Large | text-base (16px) | font-semibold | Text-Main #111827 | ページタイトル（お世話、フード等） |
+| Title-Medium | text-lg (18px) | font-bold | Text-Main #111827 | 日付表示（2026年5月15日） |
+| Title-Small | text-sm (14px) | font-medium | Text-Main #111827 | カテゴリ名（食事、投与、体重等） |
+| Body | text-sm (14px) | font-normal | Text-Body #374151 | 標準テキスト、インライン記録 |
+| Caption | text-xs (12px) | font-normal | Text-Muted #9CA3AF | 補足テキスト（前回、単位、日付） |
+| Cat-Name | text-base (16px) | font-bold | Text-Main #111827 | 猫の名前 |
+| Cat-Age | text-sm (14px) | font-normal | Text-Muted #9CA3AF | 年齢表示（13歳 6ヶ月） |
+| Tag | text-xs (12px) | font-medium | Text-Body #374151 | タグ（ドライ、ウェット等） |
+| Input | text-sm (14px) | font-normal | Text-Main #111827 | 入力欄の値 |
+| Placeholder | text-sm (14px) | font-normal | Text-Muted #9CA3AF | プレースホルダー |
+
+### 使用ルール
+- 1画面内でフォントサイズは最大4種類まで（xl, lg/base, sm, xs）
+- ウェイトはbold, semibold, medium, normalの4段階のみ使用
+- 色は必ずText-Main, Text-Body, Text-Mutedの3色から選ぶ
+- インラインスタイルでのフォント指定は禁止（Tailwindクラスを使う）
+
+## アイコンスタイル
+
+| スタイル名 | サイズ | 色 | 用途 |
+|---|---|---|---|
+| Icon-Action | w-5 h-5 (20px) | Text-Body #374151 | シェブロン（>）、＋ボタン |
+| Icon-Category | w-5 h-5 (20px) | Text-Main #111827 | カテゴリアイコン（食事、投与等） |
+
+### ルール
+- アイコンの色をインラインで個別指定しない
+- 上記の定義に従い、Tailwindクラスで指定する
+
+## 3. スペーシング・レイアウト (Layout Rules)
 Figma上のゆらぎを整理し、以下のルールで統一する。
 - **Base Padding**: `16px` (ページ左右、カード内)
 - **Tight Gap**: `8px` (項目間の狭い余白)

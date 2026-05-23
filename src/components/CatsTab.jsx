@@ -46,8 +46,8 @@ function calcAge(birthday) {
 // ── ChevronRight ──────────────────────────────────────
 function ChevronRight() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="#9CA3AF"/>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
     </svg>
   )
 }

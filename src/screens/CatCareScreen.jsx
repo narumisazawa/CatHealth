@@ -78,23 +78,23 @@ function getLastWeightRecord(catId, date) {
 // ── アイコン ─────────────────────────────────────────────
 function BackIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M15 20L7 12L15 4L16.4167 5.41667L9.83333 12L16.4167 18.5833L15 20Z" fill="#374151"/>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+      <path d="M15 20L7 12L15 4L16.4167 5.41667L9.83333 12L16.4167 18.5833L15 20Z" fill="currentColor"/>
     </svg>
   )
 }
 
 function ChevronRight() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="#9CA3AF"/>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
     </svg>
   )
 }
 
 function PlusIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-[#374151]">
       <line x1="12" y1="5" x2="12" y2="19"/>
       <line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
@@ -222,7 +222,7 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
           >
             <BackIcon />
           </button>
-          <span className="text-[17px] font-bold text-[#111827]">お世話</span>
+          <span className="text-base font-semibold text-[#111827]">お世話</span>
         </div>
       </header>
 
@@ -243,64 +243,66 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
               }
             </div>
             <div className="flex-1 flex items-baseline gap-2">
-              <span className="text-[15px] font-bold text-[#111827]">{cat.name}</span>
+              <span className="text-base font-bold text-[#111827]">{cat.name}</span>
               {age && (
-                <span className="text-xs text-[#9CA3AF]">{age.years}歳 {age.months}ヶ月</span>
+                <span className="text-sm font-normal text-[#111827]">{age.years}歳 {age.months}ヶ月</span>
               )}
             </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="#9CA3AF"/>
-            </svg>
+            <ChevronRight />
           </button>
         </div>
 
         {/* 日付 */}
         <div className="text-center py-2">
-          <span className="text-sm font-medium text-[#111827]">{formatDateJa(date)}</span>
+          <span className="text-lg font-bold text-[#111827]">{formatDateJa(date)}</span>
         </div>
 
         {/* カテゴリカード */}
-        <div className="space-y-3">
+        <div className="space-y-3 px-4">
 
           {/* 受診 */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<HospitalIcon />}
-              label="受診"
-              action={<ActionPlus onClick={() => {/* TODO */}} />}
-            />
+          <div className="bg-white rounded-xl overflow-hidden">
+            <div className="px-4 pt-4 pb-3">
+              <CategoryRow
+                icon={<HospitalIcon />}
+                label="受診"
+                action={<ActionPlus onClick={() => {/* TODO */}} />}
+              />
+            </div>
             {lastHospitalDate && (
-              <div className="flex justify-end mt-1">
-                <span className="text-xs text-[#9CA3AF]">前回　{formatDateSlash(lastHospitalDate)}</span>
+              <div className="flex justify-end px-4 pt-0 pb-4">
+                <span className="text-sm font-normal text-[#374151]">前回　{formatDateSlash(lastHospitalDate)}</span>
               </div>
             )}
           </div>
 
           {/* 食事 */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<FoodIcon />}
-              label="食事"
-              action={<ActionChevron onClick={() => {/* TODO */}} />}
-            />
-            {foodSchedules.map(s => {
+          <div className="bg-white rounded-xl overflow-hidden">
+            <div className={foodSchedules.length > 0 ? 'px-4 pt-4 pb-3' : 'px-4 py-4'}>
+              <CategoryRow
+                icon={<FoodIcon />}
+                label="食事"
+                action={<ActionChevron onClick={() => {/* TODO */}} />}
+              />
+            </div>
+            {foodSchedules.length > 0 && foodSchedules.map(s => {
               const food      = allFoods.find(f => f.id === s.foodId)
               const typeBadge = food ? shortType(food.type) : null
               return (
                 <div key={s.id}>
-                  <Divider />
-                  <div className="flex items-center gap-2 py-2">
+                  <div className="h-px bg-[#F0F0F0]" />
+                  <div className="flex items-center gap-2 px-4 pt-3 pb-4">
                     {s.time && (
-                      <span className="text-xs text-[#9CA3AF] w-10 flex-shrink-0">{s.time}</span>
+                      <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{s.time}</span>
                     )}
                     {typeBadge && (
-                      <span className="text-[10px] bg-[#F3F4F6] text-[#374151] px-1.5 py-0.5 rounded flex-shrink-0">
+                      <span className="text-xs font-medium bg-[#F3F4F6] text-[#374151] px-1.5 py-0.5 rounded flex-shrink-0">
                         {typeBadge}
                       </span>
                     )}
-                    <span className="flex-1 text-xs text-[#374151] line-clamp-2">{food?.name ?? ''}</span>
+                    <span className="flex-1 text-sm font-normal text-[#374151] line-clamp-2">{food?.name ?? ''}</span>
                     {s.amount && (
-                      <span className="text-xs text-[#374151] flex-shrink-0">{s.amount} g</span>
+                      <span className="text-sm font-normal text-[#374151] flex-shrink-0">{s.amount} g</span>
                     )}
                   </div>
                 </div>
@@ -309,21 +311,25 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
           </div>
 
           {/* 投与 */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<PillIcon />}
-              label="投与"
-              action={<ActionChevron onClick={() => {/* TODO */}} />}
-            />
+          <div className="bg-white rounded-xl overflow-hidden">
+            <div className="px-4 py-4">
+              <CategoryRow
+                icon={<PillIcon />}
+                label="投与"
+                action={<ActionChevron onClick={() => {/* TODO */}} />}
+              />
+            </div>
           </div>
 
           {/* 補給 */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<PillIcon />}
-              label="補給"
-              action={<ActionChevron onClick={() => {/* TODO */}} />}
-            />
+          <div className="bg-white rounded-xl overflow-hidden">
+            <div className="px-4 py-4">
+              <CategoryRow
+                icon={<PillIcon />}
+                label="補給"
+                action={<ActionChevron onClick={() => {/* TODO */}} />}
+              />
+            </div>
           </div>
 
           {/* うんち */}
@@ -338,9 +344,9 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
                 <Divider />
                 <div className="flex items-center gap-2 py-2">
                   {r.time && (
-                    <span className="text-xs text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
+                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
                   )}
-                  <span className="flex-1 text-xs text-[#374151]">{r.condition ?? ''}</span>
+                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
                 </div>
               </div>
             ))}
@@ -358,9 +364,9 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
                 <Divider />
                 <div className="flex items-center gap-2 py-2">
                   {r.time && (
-                    <span className="text-xs text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
+                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
                   )}
-                  <span className="flex-1 text-xs text-[#374151]">{r.condition ?? ''}</span>
+                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
                 </div>
               </div>
             ))}
@@ -378,17 +384,17 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
                 <Divider />
                 <div className="flex items-center gap-2 py-2">
                   {r.time && (
-                    <span className="text-xs text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
+                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
                   )}
-                  <span className="flex-1 text-xs text-[#374151]">{r.condition ?? ''}</span>
+                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
                 </div>
               </div>
             ))}
           </div>
 
           {/* 体重 */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <div className="flex items-center gap-3">
+          <div className="bg-white rounded-xl overflow-hidden">
+            <div className="flex items-center gap-3 px-4 pt-4 pb-3">
               <div className="flex-shrink-0 text-[#374151]"><WeightIcon /></div>
               <span className="flex-1 text-sm font-medium text-[#111827]">体重</span>
               <input
@@ -397,15 +403,15 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
                 value={weight}
                 onChange={e => setWeight(e.target.value)}
                 placeholder=""
-                className="bg-[#F3F2EF] rounded-lg px-3 py-1 w-16 text-right text-sm text-[#111827] outline-none"
+                className="bg-[#F3F2EF] rounded-lg px-3 py-1 w-16 text-right text-sm font-normal text-[#111827] outline-none"
               />
-              <span className="text-sm text-[#9CA3AF]">kg</span>
+              <span className="text-sm font-normal text-[#374151]">kg</span>
             </div>
             {lastWeight && (
-              <div className="flex justify-end gap-3 mt-1">
-                <span className="text-xs text-[#9CA3AF]">前回</span>
-                <span className="text-xs text-[#9CA3AF]">{formatDateSlash(lastWeight.date)}</span>
-                <span className="text-xs text-[#9CA3AF]">{lastWeight.weight} kg</span>
+              <div className="flex justify-end gap-3 px-4 pt-0 pb-4">
+                <span className="text-sm font-normal text-[#374151]">前回</span>
+                <span className="text-sm font-normal text-[#374151]">{formatDateSlash(lastWeight.date)}</span>
+                <span className="text-sm font-normal text-[#374151]">{lastWeight.weight} kg</span>
               </div>
             )}
           </div>

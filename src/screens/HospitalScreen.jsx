@@ -21,8 +21,8 @@ function AddIcon() {
 
 function ChevronRight() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="#0F172A"/>
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-[#374151]">
+      <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
     </svg>
   )
 }
