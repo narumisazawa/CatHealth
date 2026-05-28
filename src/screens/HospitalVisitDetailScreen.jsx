@@ -85,8 +85,8 @@ function InfoRow({ label, value, last = false }) {
         display: 'flex', alignItems: 'center',
         minHeight: 48, padding: '12px 16px', gap: 16,
       }}>
-        <span style={{ width: 72, fontSize: 14, color: '#111827', flexShrink: 0 }}>{label}</span>
-        <span style={{ flex: 1, fontSize: 14, color: '#111827', lineHeight: 1.5 }}>{value || '—'}</span>
+        <span className="text-text-primary" style={{ width: 72, fontSize: 14, flexShrink: 0 }}>{label}</span>
+        <span className="text-text-primary" style={{ flex: 1, fontSize: 14, lineHeight: 1.5 }}>{value || '—'}</span>
       </div>
       {!last && <div style={{ height: 1, background: '#F0F0F0', margin: '0 16px' }} />}
     </>
@@ -102,11 +102,11 @@ function TableHeader({ isBlood = false }) {
         height: 36, padding: '0 16px', gap: 8,
         background: '#F9FAFB',
       }}>
-        <span style={{ flex: 1, fontSize: 11, color: '#9CA3AF' }}>検査項目</span>
-        <span style={{ width: isBlood ? 64 : 80, fontSize: 11, color: '#9CA3AF', textAlign: 'right' }}>基準値</span>
-        <span style={{ width: 64, fontSize: 11, color: '#9CA3AF', textAlign: 'right' }}>今回</span>
-        <span style={{ width: 44, fontSize: 11, color: '#9CA3AF', textAlign: 'right' }}>前回</span>
-        {isBlood && <span style={{ width: 44, fontSize: 11, color: '#9CA3AF' }}> </span>}
+        <span className="text-text-placeholder" style={{ flex: 1, fontSize: 11 }}>検査項目</span>
+        <span className="text-text-placeholder" style={{ width: isBlood ? 64 : 80, fontSize: 11, textAlign: 'right' }}>基準値</span>
+        <span className="text-text-placeholder" style={{ width: 64, fontSize: 11, textAlign: 'right' }}>今回</span>
+        <span className="text-text-placeholder" style={{ width: 44, fontSize: 11, textAlign: 'right' }}>前回</span>
+        {isBlood && <span className="text-text-placeholder" style={{ width: 44, fontSize: 11 }}> </span>}
       </div>
       <div style={{ height: 1, background: '#F0F0F0' }} />
     </>
@@ -132,8 +132,8 @@ function UrineTable({ data, prevData }) {
               display: 'flex', alignItems: 'center',
               minHeight: 46, padding: '8px 16px', gap: 8,
             }}>
-              <span style={{ flex: 1, fontSize: 14, color: '#111827' }}>{item.label}</span>
-              <span style={{ width: 80, fontSize: 14, color: '#111827', textAlign: 'right' }}>
+              <span className="text-text-primary" style={{ flex: 1, fontSize: 14 }}>{item.label}</span>
+              <span className="text-text-primary" style={{ width: 80, fontSize: 14, textAlign: 'right' }}>
                 {item.ref}
               </span>
               <span style={{
@@ -181,10 +181,10 @@ function BloodTable({ data, prevData }) {
               minHeight: 46, padding: '8px 16px', gap: 8,
             }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#111827' }}>{item.abbr}</div>
-                <div style={{ fontSize: 12, color: '#111827', marginTop: 1, opacity: 0.55 }}>{item.name}</div>
+                <div className="text-text-primary" style={{ fontSize: 14, fontWeight: 700 }}>{item.abbr}</div>
+                <div className="text-text-primary" style={{ fontSize: 12, marginTop: 1, opacity: 0.55 }}>{item.name}</div>
               </div>
-              <span style={{ width: 64, fontSize: 14, color: '#111827', textAlign: 'right' }}>
+              <span className="text-text-primary" style={{ width: 64, fontSize: 14, textAlign: 'right' }}>
                 {item.ref}
               </span>
               <span style={{
@@ -201,7 +201,7 @@ function BloodTable({ data, prevData }) {
               }}>
                 {isPrevEmpty ? '—' : prevValue}
               </span>
-              <span style={{ width: 44, fontSize: 14, color: '#111827' }}>
+              <span className="text-text-primary" style={{ width: 44, fontSize: 14 }}>
                 {item.unit}
               </span>
             </div>
@@ -284,15 +284,16 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
           <img src={arrowBackSvg} width={24} height={24} alt="戻る" />
         </button>
 
-        <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>{cat.name}</span>
+        <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>{cat.name}</span>
 
         <button
           onClick={() => setShowEditSheet(true)}
+          className="text-primary"
           style={{
             position: 'absolute', right: 16,
             height: 34, padding: '0 16px', borderRadius: 999,
             border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-            color: PRIMARY, fontSize: 14, fontWeight: 600,
+            fontSize: 14, fontWeight: 600,
             cursor: 'pointer',
           }}
         >
@@ -313,29 +314,29 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
 
           {/* 処方エリア */}
           <div style={{ padding: '0 4px', marginBottom: -8 }}>
-            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>処方</span>
+            <span className="text-text-secondary" style={{ fontSize: 12 }}>処方</span>
           </div>
 
           <div style={{ background: '#FFFFFF', borderRadius: 16, overflow: 'hidden' }}>
             <div style={{ padding: '14px 16px' }}>
-              <div style={{ fontSize: 14, color: '#111827', marginBottom: 6 }}>薬の名前</div>
-              <div style={{ fontSize: 14, color: '#111827' }}>{presc.name || '—'}</div>
+              <div className="text-text-primary" style={{ fontSize: 14, marginBottom: 6 }}>薬の名前</div>
+              <div className="text-text-primary" style={{ fontSize: 14 }}>{presc.name || '—'}</div>
             </div>
             <div style={{ height: 1, background: '#F0F0F0', margin: '0 16px' }} />
             <div style={{ padding: '14px 16px' }}>
-              <div style={{ fontSize: 14, color: '#111827', marginBottom: 6 }}>頻度</div>
-              <div style={{ fontSize: 14, color: '#111827' }}>{presc.frequency || '—'}</div>
+              <div className="text-text-primary" style={{ fontSize: 14, marginBottom: 6 }}>頻度</div>
+              <div className="text-text-primary" style={{ fontSize: 14 }}>{presc.frequency || '—'}</div>
             </div>
             <div style={{ height: 1, background: '#F0F0F0', margin: '0 16px' }} />
             <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 14, color: '#111827' }}>
+              <span className="text-text-primary" style={{ fontSize: 14 }}>
                 {presc.amount ? `${presc.amount} ml` : '—'}
               </span>
             </div>
             <div style={{ height: 1, background: '#F0F0F0', margin: '0 16px' }} />
             <div style={{ padding: '14px 16px' }}>
-              <div style={{ fontSize: 14, color: '#111827', marginBottom: 6 }}>メモ</div>
-              <div style={{ fontSize: 14, color: '#111827', lineHeight: 1.6 }}>{presc.memo || '—'}</div>
+              <div className="text-text-primary" style={{ fontSize: 14, marginBottom: 6 }}>メモ</div>
+              <div className="text-text-primary" style={{ fontSize: 14, lineHeight: 1.6 }}>{presc.memo || '—'}</div>
             </div>
           </div>
 
@@ -351,11 +352,11 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
+                className={tab === t.key ? 'text-text-primary' : 'text-text-placeholder'}
                 style={{
                   flex: 1, padding: '8px 0',
                   borderRadius: 999, border: 'none', cursor: 'pointer',
                   fontSize: 14, fontWeight: tab === t.key ? 600 : 400,
-                  color: tab === t.key ? '#0F172A' : '#9CA3AF',
                   background: tab === t.key ? '#FFFFFF' : 'transparent',
                   boxShadow: tab === t.key ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
                   transition: 'all 0.15s',
@@ -368,7 +369,7 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
 
           {/* 検査結果ラベル */}
           <div style={{ padding: '0 4px', marginBottom: -8 }}>
-            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>検査結果</span>
+            <span className="text-text-secondary" style={{ fontSize: 12 }}>検査結果</span>
           </div>
 
           {/* 検査テーブル */}
@@ -382,7 +383,7 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
           {photo && (
             <>
               <div style={{ padding: '0 4px', marginBottom: -8 }}>
-                <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>写真</span>
+                <span className="text-text-secondary" style={{ fontSize: 12 }}>写真</span>
               </div>
               <div style={{ background: '#FFFFFF', borderRadius: 12, padding: 16 }}>
                 <img
@@ -398,11 +399,11 @@ export default function HospitalVisitDetailScreen({ cat, hospitalRecord, onBack 
           {memo && (
             <>
               <div style={{ padding: '0 4px', marginBottom: -8 }}>
-                <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>メモ</span>
+                <span className="text-text-secondary" style={{ fontSize: 12 }}>メモ</span>
               </div>
-              <div style={{
+              <div className="text-text-primary" style={{
                 background: '#FFFFFF', borderRadius: 12, padding: '14px 16px',
-                fontSize: 14, color: '#374151', lineHeight: 1.6, whiteSpace: 'pre-wrap',
+                fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap',
               }}>
                 {memo}
               </div>

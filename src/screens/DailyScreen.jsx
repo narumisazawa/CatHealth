@@ -1,8 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import CatCareScreen from './CatCareScreen.jsx'
+import CatDashboard from '../components/CatDashboard.jsx'
 
 const LS_CATS = 'cathealth_cats'
 const lsPhotoKey = id => `cathealth_photo_${id}`
+
+function saveCatEdit(cat, photo) {
+  if (photo) localStorage.setItem(lsPhotoKey(cat.id), photo)
+  try {
+    const prev = JSON.parse(localStorage.getItem(LS_CATS) || '[]')
+    const next = prev.map(c => c.id === cat.id ? cat : c)
+    localStorage.setItem(LS_CATS, JSON.stringify(next.map(({ photo: _, ...rest }) => rest)))
+  } catch {}
+  return { ...cat, photo: localStorage.getItem(lsPhotoKey(cat.id)) || null }
+}
 
 function loadCats() {
   try {
@@ -74,7 +85,7 @@ function getYearRange(cats) {
 
 function ChevronRight() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-text-primary">
       <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
     </svg>
   )
@@ -93,14 +104,14 @@ function MiniCalendar({ year, month, onClick }) {
   const rows = buildCalendarGrid(year, month)
   return (
     <div onClick={onClick} className="cursor-pointer">
-      <div className="text-[11px] font-bold text-[#111827] mb-1">{month}月</div>
+      <div className="text-[11px] font-bold text-text-primary mb-1">{month}月</div>
       {rows.map((row, ri) => (
         <div key={ri} className="flex">
           {row.map((cell, ci) => {
             const isSun = ci === 0
             const isSat = ci === 6
             const colorClass = cell.isCurrentMonth
-              ? isSun ? 'text-[#F40404]' : isSat ? 'text-[#006FE5]' : 'text-[#111827]'
+              ? isSun ? 'text-error' : isSat ? 'text-calendar-sat' : 'text-text-primary'
               : 'text-[#D1D5DB]'
             return (
               <div key={ci} className={`flex-1 text-center text-[9px] leading-[14px] ${colorClass}`}>
@@ -132,7 +143,7 @@ function YearView({ cats, onMonthSelect }) {
       <div className="flex-1 overflow-y-auto pb-20">
         {years.map(y => (
           <div key={y} ref={y === currentYear ? currentYearRef : null} className="px-4 pt-6 pb-4">
-            <h2 className="text-[22px] font-bold text-[#111827] mb-4">{y}年</h2>
+            <h2 className="text-[22px] font-bold text-text-primary mb-4">{y}年</h2>
             <div className="grid grid-cols-3 gap-x-4 gap-y-6">
               {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                 <MiniCalendar
@@ -157,16 +168,16 @@ function MonthlyView({ year, month, onDateSelect, onYearNav }) {
   return (
     <div className="h-dvh flex flex-col bg-white overflow-hidden">
       <header className="flex-shrink-0 bg-white border-b border-gray-200">
-        <div className="relative flex items-center justify-center h-14 px-4">
+        <div className="relative flex items-center justify-center h-[60px] px-4">
           <button
             onClick={onYearNav}
-            className="absolute left-4 flex items-center gap-0.5 text-sm font-medium text-[#374151] bg-transparent cursor-pointer p-0"
+            className="absolute left-4 flex items-center gap-0.5 text-sm font-medium text-text-primary bg-transparent cursor-pointer p-0"
             style={{ border: 'none' }}
           >
             <ChevronLeft />
             {year}年
           </button>
-          <span className="text-[17px] font-bold text-[#111827]">
+          <span className="text-[17px] font-bold text-text-primary">
             {year}年{month}月
           </span>
         </div>
@@ -175,10 +186,10 @@ function MonthlyView({ year, month, onDateSelect, onYearNav }) {
       <div className="flex-1 overflow-y-auto pb-20">
         {days.map(({ d, dow, dateStr, isSun, isSat }) => {
           const textColor = isSun
-            ? 'text-[#F40404]'
+            ? 'text-error'
             : isSat
-              ? 'text-[#006FE5]'
-              : 'text-[#111827]'
+              ? 'text-calendar-sat'
+              : 'text-text-primary'
           return (
             <div key={dateStr} className="border-b border-[#F0F0F0]">
               <button
@@ -199,31 +210,36 @@ function MonthlyView({ year, month, onDateSelect, onYearNav }) {
   )
 }
 
+
 // ── 猫カード ─────────────────────────────────────────────
 function CatCareCard({ cat, onClick }) {
-  const initials = cat.name?.[0] ?? '?'
-  // TODO: 当日の投薬通知を取得する
-  const notification = null
-
   return (
     <button
       onClick={onClick}
-      className="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-3 text-left cursor-pointer"
-      style={{ border: 'none' }}
+      className="w-full bg-white rounded-2xl px-4 py-3 flex items-center gap-3 text-left cursor-pointer border-0"
     >
-      <div className="w-11 h-11 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden flex items-center justify-center text-white font-bold text-lg">
+      <div className="w-12 h-12 rounded-full bg-[#E5E7EB] flex-shrink-0 overflow-hidden flex items-center justify-center">
         {cat.photo
           ? <img src={cat.photo} alt={cat.name} className="w-full h-full object-cover" />
-          : initials
+          : (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12.0001 4.99978C12.6701 4.99978 13.3501 5.08978 14.0001 5.25978C15.7801 3.25978 19.0301 2.41978 20.4201 2.99978C21.8201 3.57978 20.0001 9.99978 20.0001 9.99978C20.5701 11.0698 21.0001 12.2398 21.0001 13.4398C21.0001 17.8998 16.9701 20.9998 12.0001 20.9998C7.03008 20.9998 3.00008 17.9998 3.00008 13.4398C3.00008 12.1898 3.50008 11.0398 4.00008 9.99978C4.00008 9.99978 2.11008 3.57978 3.50008 2.99978C4.89008 2.41978 8.22008 3.22978 10.0001 5.22978C10.6561 5.07888 11.3269 5.00174 12.0001 4.99978Z"
+                stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              />
+              <path d="M8 14V14.5" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M16 14V14.5" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M11.25 16.25H12.75L12 17L11.25 16.25Z" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )
         }
       </div>
-      <div className="flex-1 flex flex-col gap-0.5">
-        <span className="text-[15px] font-semibold text-[#111827]">{cat.name}のお世話</span>
-        {notification && (
-          <span className="text-xs text-[#9CA3AF]">{notification}</span>
-        )}
+      <div className="flex-1 min-w-0">
+        <span className="text-base font-normal text-text-primary">{cat.name}のお世話</span>
       </div>
-      <ChevronRight />
+      <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-text-primary flex-shrink-0">
+        <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
+      </svg>
     </button>
   )
 }
@@ -235,25 +251,25 @@ function DailyTopView({ selectedDate, cats, onMonthNav, onCatDetail }) {
   return (
     <div className="h-dvh flex flex-col bg-[#F7F7F7] overflow-hidden">
       <header className="flex-shrink-0 bg-white border-b border-gray-200">
-        <div className="relative flex items-center justify-center h-14 px-4">
+        <div className="relative flex items-center justify-center h-[60px] px-4">
           <button
             onClick={onMonthNav}
-            className="absolute left-4 flex items-center gap-0.5 text-sm font-medium text-[#374151] bg-transparent cursor-pointer p-0"
+            className="absolute left-4 flex items-center gap-0.5 text-sm font-medium text-text-primary bg-transparent cursor-pointer p-0"
             style={{ border: 'none' }}
           >
             <ChevronLeft />
             {month}月
           </button>
-          <span className="text-[17px] font-bold text-[#111827]">
+          <span className="text-[17px] font-bold text-text-primary">
             {formatDateJa(selectedDate)}
           </span>
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto pb-20 px-4 pt-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto pb-20 px-4 pt-4 flex flex-col gap-2">
         {cats.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-[#9CA3AF] leading-relaxed">
+            <p className="text-sm text-text-placeholder leading-relaxed">
               まだ猫が登録されていません。<br />
               猫タブから追加してください。
             </p>
@@ -308,13 +324,24 @@ export default function DailyScreen({ onGoToCatsTab }) {
     setView('care')
   }
 
+  if (view === 'dashboard' && careCat) {
+    return (
+      <CatDashboard
+        cat={careCat}
+        cats={cats}
+        onBack={() => setView('care')}
+        onSaveCat={(updatedCat, photo) => setCareCat(saveCatEdit(updatedCat, photo))}
+      />
+    )
+  }
+
   if (view === 'care' && careCat) {
     return (
       <CatCareScreen
         cat={careCat}
         date={selectedDate}
         onBack={() => setView('top')}
-        onGoToCatsTab={onGoToCatsTab}
+        onGoToDashboard={() => setView('dashboard')}
       />
     )
   }

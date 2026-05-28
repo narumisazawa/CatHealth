@@ -50,7 +50,7 @@ function FormRow({ label, children, last = false }) {
         display: 'flex', alignItems: 'center',
         minHeight: 52, padding: '0 16px', gap: 12,
       }}>
-        <span style={{ width: 104, fontSize: 14, color: '#111827', flexShrink: 0 }}>
+        <span className="text-text-primary" style={{ width: 104, fontSize: 14, flexShrink: 0 }}>
           {label}
         </span>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
@@ -68,7 +68,6 @@ const inputStyle = {
   border: 'none',
   outline: 'none',
   fontSize: 14,
-  color: '#111827',
   background: 'transparent',
   padding: 0,
 }
@@ -80,9 +79,8 @@ function SelectRow({ value, onChange, placeholder, options }) {
   return (
     <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
       {/* 表示テキスト */}
-      <span style={{
+      <span className={value ? 'text-text-primary' : 'text-text-placeholder'} style={{
         flex: 1, fontSize: 14,
-        color: value ? '#111827' : '#9CA3AF',
         pointerEvents: 'none',
       }}>
         {value || placeholder}
@@ -126,9 +124,8 @@ function getDiseaseGroup(mode, value) {
 function DiseaseSelectRow({ value, onChange }) {
   return (
     <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
-      <span style={{
+      <span className={value ? 'text-text-primary' : 'text-text-placeholder'} style={{
         flex: 1, fontSize: 14,
-        color: value ? '#111827' : '#9CA3AF',
         pointerEvents: 'none',
       }}>
         {value || '選択してください'}
@@ -321,10 +318,11 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
             {/* 写真を追加ボタン */}
             <button
               onClick={() => fileRef.current?.click()}
+              className="text-primary"
               style={{
                 padding: '6px 20px', borderRadius: 999,
                 border: '1.5px solid #EA5EAD', background: 'transparent',
-                color: '#EA5EAD', fontSize: 13, fontWeight: 600,
+                fontSize: 13, fontWeight: 600,
                 cursor: 'pointer',
               }}
             >
@@ -341,6 +339,7 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
         <div style={{ margin: '0 16px', background: '#FFFFFF', borderRadius: 16, overflow: 'hidden' }}>
           <FormRow label="名前">
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={name}
               onChange={e => setName(e.target.value)}
@@ -350,6 +349,7 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
 
           <FormRow label="誕生日">
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={birthday}
               onChange={e => setBirthday(e.target.value)}
@@ -383,6 +383,7 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
 
           <FormRow label="マイクロチップ">
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={microchip}
               onChange={e => setMicrochip(e.target.value)}
@@ -392,6 +393,7 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
 
           <FormRow label="AIPO登録コード" last>
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={aipo}
               onChange={e => setAipo(e.target.value)}
@@ -408,10 +410,11 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
                 display: 'flex', alignItems: 'center',
                 minHeight: 52, padding: '0 16px', gap: 12,
               }}>
-                <span style={{ width: 104, fontSize: 14, color: '#111827', flexShrink: 0 }}>疾患</span>
+                <span className="text-text-primary" style={{ width: 104, fontSize: 14, flexShrink: 0 }}>疾患</span>
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
                   {disease.mode === 'text' ? (
                     <input
+                      className="text-text-primary"
                       style={inputStyle}
                       value={disease.value}
                       onChange={e => handleDiseaseTextChange(index, e.target.value)}
@@ -449,10 +452,11 @@ export default function CatFormModal({ onSave, onClose, initialCat = null }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px 0' }}>
           <button
             onClick={handleAddDisease}
+            className="text-primary"
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 4,
-              color: '#EA5EAD', fontSize: 13, fontWeight: 600, padding: '4px 0',
+              fontSize: 13, fontWeight: 600, padding: '4px 0',
             }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA5EAD" strokeWidth="2.5" strokeLinecap="round">

@@ -311,7 +311,7 @@ function WeightGraph({ catId, dataKey }) {
 
   return (
     <div ref={containerRef} style={{ background: '#FFFFFF', borderRadius: 12, padding: '12px 12px 4px' }}>
-      <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginBottom: 8 }}>体重</div>
+      <div className="text-text-primary" style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>体重</div>
       <div style={{ display: 'flex' }}>
         {/* Y軸ラベル（固定） */}
         <svg width={PAD_L} height={svgH} style={{ flexShrink: 0, overflow: 'visible' }}>
@@ -421,7 +421,7 @@ function FilterPanel({ filters, onChange, onClose }) {
                   </svg>
                 )}
               </div>
-              <span style={{ fontSize: 14, color: '#0F172A' }}>{TYPE_LABEL[type]}</span>
+              <span className="text-text-primary" style={{ fontSize: 14 }}>{TYPE_LABEL[type]}</span>
             </button>
           )
         })}
@@ -451,11 +451,12 @@ function DotMenu({ onProfile, onExport, onImportJson, onImportIcs, onClose }) {
           <button
             key={item.label}
             onClick={() => { item.action?.(); onClose() }}
+            className="text-text-primary"
             style={{
               display: 'block', width: '100%', padding: '13px 16px',
               background: 'none', border: 'none',
               borderTop: i > 0 ? '1px solid #F0F0F0' : 'none',
-              cursor: 'pointer', textAlign: 'left', fontSize: 14, color: '#0F172A',
+              cursor: 'pointer', textAlign: 'left', fontSize: 14,
             }}
           >
             {item.label}
@@ -473,14 +474,14 @@ function RecordRow({ record, hospitals, onHospitalClick }) {
   function getRight() {
     if (type === 'weight') {
       return (
-        <span style={{ fontSize: 15, color: '#0F172A' }}>
+        <span className="text-text-primary" style={{ fontSize: 15 }}>
           {data.weight != null ? `${data.weight}` : '—'}
-          <span style={{ fontSize: 13, color: '#9CA3AF', marginLeft: 2 }}>kg</span>
+          <span className="text-text-placeholder" style={{ fontSize: 13, marginLeft: 2 }}>kg</span>
         </span>
       )
     }
     if (type === 'poop' || type === 'pee') {
-      return <span style={{ fontSize: 14, color: '#0F172A' }}>{data.condition || '—'}</span>
+      return <span className="text-text-primary" style={{ fontSize: 14 }}>{data.condition || '—'}</span>
     }
     if (type === 'vomit') {
       return (
@@ -489,7 +490,7 @@ function RecordRow({ record, hospitals, onHospitalClick }) {
             <img src={data.photo} alt=""
               style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
           )}
-          <span style={{ fontSize: 14, color: '#0F172A' }}>{data.condition || '—'}</span>
+          <span className="text-text-primary" style={{ fontSize: 14 }}>{data.condition || '—'}</span>
           <ChevronRight />
         </div>
       )
@@ -498,7 +499,7 @@ function RecordRow({ record, hospitals, onHospitalClick }) {
       const hosp = hospitals.find(h => h.id === data.hospitalId)
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 14, color: '#0F172A' }}>{hosp?.name || '—'}</span>
+          <span className="text-text-primary" style={{ fontSize: 14 }}>{hosp?.name || '—'}</span>
           <ChevronRight />
         </div>
       )
@@ -516,7 +517,7 @@ function RecordRow({ record, hospitals, onHospitalClick }) {
       }}
     >
       <img src={TYPE_ICON[type]} width={20} height={20} alt={TYPE_LABEL[type]} style={{ flexShrink: 0 }} />
-      <span style={{ fontSize: 14, color: '#374151', flexShrink: 0 }}>{formatDate(date)}</span>
+      <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0 }}>{formatDate(date)}</span>
       <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         {getRight()}
       </div>
@@ -674,7 +675,7 @@ export default function CatDetailScreen({ cat: initialCat, cats, onBack, onSaveC
           <img src={arrowBackSvg} width={24} height={24} alt="戻る" />
         </button>
 
-        <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>{cat.name}</span>
+        <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>{cat.name}</span>
 
         <div style={{ position: 'absolute', right: 8 }}>
           <button
@@ -736,7 +737,7 @@ export default function CatDetailScreen({ cat: initialCat, cats, onBack, onSaveC
               }}
             >
               <img src={tuneSvg} width={18} height={18} alt="フィルター" />
-              <span style={{ fontSize: 13, color: showFilter ? PRIMARY : '#374151' }}>フィルター</span>
+              <span className={showFilter ? 'text-primary' : 'text-text-primary'} style={{ fontSize: 13 }}>フィルター</span>
             </button>
             {showFilter && (
               <FilterPanel
@@ -749,7 +750,7 @@ export default function CatDetailScreen({ cat: initialCat, cats, onBack, onSaveC
 
           {/* 記録一覧 */}
           {filteredRecords.length === 0 ? (
-            <div style={{ padding: '60px 0', textAlign: 'center', fontSize: 14, color: '#9CA3AF' }}>
+            <div className="text-text-placeholder" style={{ padding: '60px 0', textAlign: 'center', fontSize: 14 }}>
               記録がありません
             </div>
           ) : (

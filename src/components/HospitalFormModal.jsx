@@ -66,7 +66,7 @@ function FormRow({ label, children, last = false }) {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', minHeight: 50, padding: '12px 24px', gap: 24 }}>
-        <span style={{ width: 80, fontSize: 14, color: 'rgba(0,0,0,0.7)', flexShrink: 0 }}>{label}</span>
+        <span className="text-text-secondary" style={{ width: 80, fontSize: 14, flexShrink: 0 }}>{label}</span>
         <div style={{ flex: 1 }}>{children}</div>
       </div>
       {!last && <div style={{ height: 1, background: 'rgba(0,0,0,0.15)' }} />}
@@ -76,7 +76,7 @@ function FormRow({ label, children, last = false }) {
 
 const inputStyle = {
   border: 'none', outline: 'none',
-  fontSize: 14, color: '#0F172A',
+  fontSize: 14,
   background: 'transparent', padding: 0,
   width: '100%',
 }
@@ -95,11 +95,11 @@ function TimePill({ value, onChange, disabled }) {
         value={value}
         onChange={e => onChange(e.target.value)}
         disabled={disabled}
+        className="text-text-primary"
         style={{
           border: 'none', outline: 'none',
           background: 'transparent',
           fontSize: 14,
-          color: '#0F172A',
           width: 70,
           cursor: disabled ? 'default' : 'pointer',
         }}
@@ -126,12 +126,12 @@ function DayRow({ label, data, onChange, last = false }) {
       <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
         {/* 行1：曜日ラベル */}
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>{label}</span>
+        <span className="text-text-primary" style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
 
         {/* 行2：定休日 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Checkbox checked={closed} onChange={() => set('closed', !closed)} />
-          <span style={{ fontSize: 14, color: '#0F172A' }}>定休日</span>
+          <span className="text-text-primary" style={{ fontSize: 14 }}>定休日</span>
         </div>
 
         {/* 行3：午前 */}
@@ -141,11 +141,11 @@ function DayRow({ label, data, onChange, last = false }) {
           pointerEvents: closed ? 'none' : 'auto',
         }}>
           <TimePill value={am.start} onChange={v => set('am.start', v)} disabled={amClosed} />
-          <span style={{ fontSize: 12, color: '#0F172A' }}>〜</span>
+          <span className="text-text-primary" style={{ fontSize: 12 }}>〜</span>
           <TimePill value={am.end}   onChange={v => set('am.end',   v)} disabled={amClosed} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 4 }}>
             <Checkbox checked={amClosed} onChange={() => set('amClosed', !amClosed)} />
-            <span style={{ fontSize: 13, color: '#0F172A', whiteSpace: 'nowrap' }}>午前休診</span>
+            <span className="text-text-primary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>午前休診</span>
           </div>
         </div>
 
@@ -156,11 +156,11 @@ function DayRow({ label, data, onChange, last = false }) {
           pointerEvents: closed ? 'none' : 'auto',
         }}>
           <TimePill value={pm.start} onChange={v => set('pm.start', v)} disabled={pmClosed} />
-          <span style={{ fontSize: 12, color: '#0F172A' }}>〜</span>
+          <span className="text-text-primary" style={{ fontSize: 12 }}>〜</span>
           <TimePill value={pm.end}   onChange={v => set('pm.end',   v)} disabled={pmClosed} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 4 }}>
             <Checkbox checked={pmClosed} onChange={() => set('pmClosed', !pmClosed)} />
-            <span style={{ fontSize: 13, color: '#0F172A', whiteSpace: 'nowrap' }}>午後休診</span>
+            <span className="text-text-primary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>午後休診</span>
           </div>
         </div>
 
@@ -225,7 +225,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '95dvh',
@@ -289,6 +289,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
           <div style={{ background: '#FFFFFF', borderRadius: 12, overflow: 'hidden' }}>
             <FormRow label="動物病院名">
               <input
+                className="text-text-primary"
                 style={inputStyle}
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -297,6 +298,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
             </FormRow>
             <FormRow label="住所">
               <input
+                className="text-text-primary"
                 style={inputStyle}
                 value={address}
                 onChange={e => setAddress(e.target.value)}
@@ -305,6 +307,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
             </FormRow>
             <FormRow label="電話" last>
               <input
+                className="text-text-primary"
                 style={inputStyle}
                 type="tel"
                 value={phone}
@@ -316,7 +319,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
 
           {/* 診察時間ラベル */}
           <div style={{ padding: '8px 8px 4px' }}>
-            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>診察時間</span>
+            <span className="text-text-secondary" style={{ fontSize: 12 }}>診察時間</span>
           </div>
 
           {/* 診察時間カード */}
@@ -334,7 +337,7 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
 
           {/* メモラベル */}
           <div style={{ padding: '8px 8px 4px' }}>
-            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>メモ</span>
+            <span className="text-text-secondary" style={{ fontSize: 12 }}>メモ</span>
           </div>
 
           {/* メモカード */}
@@ -344,10 +347,11 @@ export default function HospitalFormModal({ onSave, onClose, initialHospital = n
               onChange={e => setMemo(e.target.value)}
               placeholder="メモを入力"
               rows={4}
+              className="text-text-primary"
               style={{
                 width: '100%', border: 'none', outline: 'none',
                 resize: 'vertical',
-                fontSize: 14, color: '#0F172A',
+                fontSize: 14,
                 background: 'transparent', padding: 0,
                 lineHeight: 1.6,
                 boxSizing: 'border-box',

@@ -45,9 +45,9 @@ function SelectFormRow({ label, value, displayText, options, onChange, placehold
           display: 'flex', alignItems: 'center',
           minHeight: 52, padding: '0 16px', gap: 12,
         }}>
-          <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 80 }}>{label}</span>
+          <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 80 }}>{label}</span>
           <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 4 }}>
-            <span style={{ fontSize: 14, color: value ? '#0F172A' : '#9CA3AF' }}>
+            <span className={value ? 'text-text-primary' : 'text-text-placeholder'} style={{ fontSize: 14 }}>
               {displayText || placeholder}
             </span>
             <ExpandIcon />
@@ -251,7 +251,7 @@ export default function DailyFoodSheet({
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '90dvh',
@@ -291,7 +291,7 @@ export default function DailyFoodSheet({
             </button>
 
             {/* タイトル（中央） */}
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>
+            <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>
               {isEdit ? 'フードアイテムを編集' : 'フードアイテムを追加'}
             </span>
 
@@ -320,7 +320,7 @@ export default function DailyFoodSheet({
 
             {/* フードアイテム ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>フードアイテム</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>フードアイテム</span>
             </div>
 
             {/* フードアイテム カード */}
@@ -334,7 +334,7 @@ export default function DailyFoodSheet({
                 last={group !== '' && foodsByGroup.length === 0}
               />
               {group !== '' && foodsByGroup.length === 0 ? (
-                <div style={{ padding: '12px 16px', fontSize: 14, color: '#9CA3AF' }}>
+                <div className="text-text-placeholder" style={{ padding: '12px 16px', fontSize: 14 }}>
                   このグループにフードが登録されていません
                 </div>
               ) : (
@@ -367,7 +367,7 @@ export default function DailyFoodSheet({
 
             {/* スケジュール ラベル */}
             <div style={{ padding: '8px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>スケジュール</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>スケジュール</span>
             </div>
 
             {/* スケジュール カード */}
@@ -377,7 +377,7 @@ export default function DailyFoodSheet({
                 display: 'flex', alignItems: 'center',
                 minHeight: 52, padding: '0 16px', gap: 12,
               }}>
-                <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 120 }}>1日あたりの量</span>
+                <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 120 }}>1日あたりの量</span>
                 <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 6 }}>
                   <div style={{
                     background: '#F6F6F6', borderRadius: 15, height: 32,
@@ -390,15 +390,16 @@ export default function DailyFoodSheet({
                       value={amount}
                       onChange={e => setAmount(e.target.value)}
                       placeholder="0"
+                      className="text-text-primary"
                       style={{
                         border: 'none', outline: 'none',
                         background: 'transparent',
-                        fontSize: 14, color: '#0F172A',
+                        fontSize: 14,
                         width: 56, textAlign: 'right',
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 14, color: '#9CA3AF', flexShrink: 0 }}>g</span>
+                  <span className="text-text-placeholder" style={{ fontSize: 14, flexShrink: 0 }}>g</span>
                 </div>
               </div>
 
@@ -420,10 +421,11 @@ export default function DailyFoodSheet({
               <div style={{ paddingTop: 8, display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={handleStop}
+                  className="text-primary"
                   style={{
                     height: 48, padding: '0 32px', borderRadius: 999,
                     border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-                    color: PRIMARY, fontSize: 14, fontWeight: 600,
+                    fontSize: 14, fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: 8,
                   }}

@@ -96,7 +96,7 @@ function PhotoMemoDelete({ photo, setPhoto, memo, setMemo, isEdit, onDelete }) {
   return (
     <>
       <div style={{ padding: '8px 4px 2px' }}>
-        <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>写真を撮る</span>
+        <span className="text-text-secondary" style={{ fontSize: 12 }}>写真を撮る</span>
       </div>
       <div style={{ background: '#FFFFFF', borderRadius: 12, padding: 16 }}>
         <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhotoChange} style={{ display: 'none' }} />
@@ -118,7 +118,7 @@ function PhotoMemoDelete({ photo, setPhoto, memo, setMemo, isEdit, onDelete }) {
       </div>
 
       <div style={{ padding: '8px 4px 2px' }}>
-        <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>メモ</span>
+        <span className="text-text-secondary" style={{ fontSize: 12 }}>メモ</span>
       </div>
       <div style={{ background: '#FFFFFF', borderRadius: 12, padding: 16 }}>
         <textarea
@@ -126,10 +126,11 @@ function PhotoMemoDelete({ photo, setPhoto, memo, setMemo, isEdit, onDelete }) {
           onChange={e => setMemo(e.target.value)}
           placeholder="メモを入力"
           rows={3}
+          className="text-text-primary"
           style={{
             width: '100%', boxSizing: 'border-box',
             border: 'none', outline: 'none', resize: 'none',
-            fontSize: 14, color: '#0F172A', lineHeight: 1.6,
+            fontSize: 14, lineHeight: 1.6,
             background: 'transparent', padding: 0,
           }}
         />
@@ -139,10 +140,11 @@ function PhotoMemoDelete({ photo, setPhoto, memo, setMemo, isEdit, onDelete }) {
         <div style={{ paddingTop: 8, display: 'flex', justifyContent: 'center' }}>
           <button
             onClick={onDelete}
+            className="text-primary"
             style={{
               height: 48, padding: '0 32px', borderRadius: 999,
               border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-              color: PRIMARY, fontSize: 14, fontWeight: 600,
+              fontSize: 14, fontWeight: 600,
               cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 8,
             }}
@@ -168,9 +170,9 @@ function UrineTab({ data, onChange, photo, setPhoto, memo, setMemo, isEdit, onDe
               {idx > 0 && <div style={{ height: 1, background: '#F0F0F0' }} />}
               <div style={{ display: 'flex', alignItems: 'center', minHeight: 48, padding: '0 16px', gap: 8 }}>
                 {/* ラベル */}
-                <div style={{ flex: 1, fontSize: 14, color: '#111827' }}>{item.label}</div>
+                <div className="text-text-primary" style={{ flex: 1, fontSize: 14 }}>{item.label}</div>
                 {/* 基準値 */}
-                <div style={{ width: 88, fontSize: 12, color: '#9CA3AF', flexShrink: 0, textAlign: 'center' }}>
+                <div className="text-text-placeholder" style={{ width: 88, fontSize: 12, flexShrink: 0, textAlign: 'center' }}>
                   {item.ref}
                 </div>
                 {/* 入力 */}
@@ -183,17 +185,17 @@ function UrineTab({ data, onChange, photo, setPhoto, memo, setMemo, isEdit, onDe
                       onChange={e => onChange(item.key, e.target.value)}
                       step={item.step}
                       placeholder="—"
+                      className="text-text-primary"
                       style={{
                         width: '100%', textAlign: 'right',
                         border: 'none', outline: 'none',
                         background: 'transparent',
                         fontSize: 14,
-                        color: '#111827',
                       }}
                     />
                   ) : (
                     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <span style={{ fontSize: 14, color: '#111827' }}>{value || '－'}</span>
+                      <span className="text-text-primary" style={{ fontSize: 14 }}>{value || '－'}</span>
                       <ExpandIcon />
                       <select
                         value={value || '－'}
@@ -233,11 +235,11 @@ function BloodTab({ data, onChange, photo, setPhoto, memo, setMemo, isEdit, onDe
               <div style={{ display: 'flex', alignItems: 'center', minHeight: 52, padding: '0 16px', gap: 8 }}>
                 {/* ラベル */}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#111827' }}>{item.abbr}</div>
-                  <div style={{ fontSize: 12, color: '#111827', lineHeight: 1.3 }}>{item.name}</div>
+                  <div className="text-text-primary" style={{ fontSize: 14, fontWeight: 700 }}>{item.abbr}</div>
+                  <div className="text-text-primary" style={{ fontSize: 12, lineHeight: 1.3 }}>{item.name}</div>
                 </div>
                 {/* 基準値 */}
-                <div style={{ width: 64, fontSize: 12, color: '#9CA3AF', flexShrink: 0, textAlign: 'center' }}>
+                <div className="text-text-placeholder" style={{ width: 64, fontSize: 12, flexShrink: 0, textAlign: 'center' }}>
                   {item.refLabel}
                 </div>
                 {/* 入力値 */}
@@ -249,17 +251,17 @@ function BloodTab({ data, onChange, photo, setPhoto, memo, setMemo, isEdit, onDe
                     onChange={e => onChange(item.key, e.target.value)}
                     step="any"
                     placeholder="—"
+                    className="text-text-primary"
                     style={{
                       width: '100%', textAlign: 'right',
                       border: 'none', outline: 'none',
                       background: 'transparent',
                       fontSize: 14,
-                      color: '#111827',
                     }}
                   />
                 </div>
                 {/* 単位 */}
-                <div style={{ width: 48, flexShrink: 0, fontSize: 12, color: '#111827', textAlign: 'right' }}>
+                <div className="text-text-primary" style={{ width: 48, flexShrink: 0, fontSize: 12, textAlign: 'right' }}>
                   {item.unit}
                 </div>
               </div>
@@ -365,7 +367,7 @@ export default function DailyExamSheet({
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '90dvh',
@@ -401,7 +403,7 @@ export default function DailyExamSheet({
               </svg>
             </button>
 
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>診察結果</span>
+            <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>診察結果</span>
 
             <button
               onClick={handleSave}
@@ -432,6 +434,7 @@ export default function DailyExamSheet({
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
+                className={tab === t.key ? 'text-text-primary' : 'text-text-placeholder'}
                 style={{
                   flex: 1, height: 36,
                   borderRadius: 999,
@@ -439,7 +442,6 @@ export default function DailyExamSheet({
                   cursor: 'pointer',
                   fontSize: 14,
                   fontWeight: tab === t.key ? 600 : 400,
-                  color: tab === t.key ? '#0F172A' : '#9CA3AF',
                   background: tab === t.key ? '#FFFFFF' : 'transparent',
                   boxShadow: tab === t.key ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
                   transition: 'all 0.15s',

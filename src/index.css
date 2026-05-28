@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 @theme {
+  /* Semantic Tokens — Design.md 準拠 */
   --color-primary: #EA5EAD;
-  --color-primary-subtle: #FFF0F5;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: rgba(0,0,0,0.70);
+  --color-text-placeholder: #8A8987;
+  --color-error: #F40404;
+  --color-calendar-sun: #F40404;
+  --color-calendar-sat: #006FE5;
+
+  /* Surface */
   --color-surface-bg: #F7F7F7;
   --color-surface-card: #FFFFFF;
-  --color-neutral-main: #111827;
-  --color-neutral-body: #374151;
-  --color-neutral-muted: #9CA3AF;
-  --color-error: #EF4444;
+  --color-primary-subtle: #FFF0F5;
 
   --spacing-page: 16px;
   --spacing-tight: 8px;
@@ -40,7 +45,7 @@ body {
 }
 
 input::placeholder, textarea::placeholder {
-  color: #9CA3AF;
+  color: #8A8987;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -66,6 +71,22 @@ input[type="number"] {
 .daily-scroll {
   scrollbar-width: thin;
   scrollbar-color: #D4D1CA transparent;
+}
+
+/* date/time input のネイティブアイコンをクリック可能なまま非表示 */
+input[type="date"],
+input[type="time"] {
+  position: relative;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 /* 体重グラフ横スクロールエリア用スクロールバー */

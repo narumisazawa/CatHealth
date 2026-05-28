@@ -1,32 +1,29 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import CatCard from '../components/CatCard.jsx'
+import CatMealScreen from './CatMealScreen.jsx'
+import CatPillScreen from './CatPillScreen.jsx'
+import CatPoopScreen from './CatPoopScreen.jsx'
+import CatPeeScreen from './CatPeeScreen.jsx'
+import CatVomitScreen from './CatVomitScreen.jsx'
+import CatSupplementScreen from './CatSupplementScreen.jsx'
+import VisitScreen from './VisitScreen.jsx'
 
 // ── localStorage ─────────────────────────────────────────
-const LS_FOODS       = 'cathealth_foods'
-const LS_DAILY_FOODS = 'cathealth_daily_foods'
-const LS_POOP        = 'cathealth_poop_records'
-const LS_PEE         = 'cathealth_daily_pee'
-const LS_VOMIT       = 'cathealth_daily_vomit'
-const LS_WEIGHT      = 'cathealth_daily_weight'
-const LS_HOSPITAL_V  = 'cathealth_daily_hospital'
+const LS_FOODS        = 'cathealth_foods'
+const LS_DAILY_FOODS  = 'cathealth_daily_foods'
+const LS_POOP         = 'cathealth_poop_records'
+const LS_PEE          = 'cathealth_pee_records'
+const LS_VOMIT        = 'cathealth_vomit_records'
+const LS_WEIGHT       = 'cathealth_daily_weight'
+const LS_HOSPITAL_V   = 'cathealth_daily_hospital'
+const LS_MEDS         = 'cathealth_daily_meds'
+const LS_SUPPLEMENTS  = 'cathealth_supplement_records'
 
 function load(key) {
   try { return JSON.parse(localStorage.getItem(key) || '[]') } catch { return [] }
 }
 
 // ── ユーティリティ ────────────────────────────────────────
-function calcAge(birthday) {
-  if (!birthday) return null
-  const [y, m, d] = birthday.replace(/\//g, '-').split('-').map(Number)
-  if (!y || !m || !d) return null
-  const now = new Date()
-  let years  = now.getFullYear() - y
-  let months = now.getMonth() + 1 - m
-  if (months < 0) { years--;  months += 12 }
-  if (now.getDate() < d) { months--; if (months < 0) { years--; months += 12 } }
-  if (years < 0) return null
-  return { years, months }
-}
-
 function formatDateJa(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number)
   return `${y}年${m}月${d}日`
@@ -78,7 +75,7 @@ function getLastWeightRecord(catId, date) {
 // ── アイコン ─────────────────────────────────────────────
 function BackIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-text-primary">
       <path d="M15 20L7 12L15 4L16.4167 5.41667L9.83333 12L16.4167 18.5833L15 20Z" fill="currentColor"/>
     </svg>
   )
@@ -86,20 +83,12 @@ function BackIcon() {
 
 function ChevronRight() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#374151]">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-text-placeholder">
       <path d="M8.99674 20L7.58008 18.5833L14.1634 12L7.58008 5.41667L8.99674 4L16.9967 12L8.99674 20Z" fill="currentColor"/>
     </svg>
   )
 }
 
-function PlusIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-[#374151]">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-  )
-}
 
 function HospitalIcon() {
   return (
@@ -112,7 +101,7 @@ function HospitalIcon() {
 function FoodIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M12 4C14.2972 4 16.4215 4.34755 18.0078 4.94238C18.7973 5.23843 19.5062 5.61502 20.0352 6.08398C20.527 6.52015 20.9394 7.11055 20.9932 7.83887L22.9619 14.7666L23 14.9004V15.04C23 15.8285 22.4919 16.5073 21.9736 16.999C21.4138 17.5301 20.6423 18.0345 19.7285 18.4697C17.8948 19.3431 15.3605 20 12.4541 20C9.55185 19.9999 6.80672 19.3443 4.76855 18.4883C3.75243 18.0615 2.87446 17.5699 2.23145 17.0547C1.91046 16.7975 1.62045 16.5122 1.40332 16.2021C1.19108 15.899 1.00001 15.5013 1 15.04V14.8906L1.04395 14.748L3.01855 8.28906C3.00598 8.19514 3 8.09872 3 8C3 7.19722 3.43717 6.5519 3.96484 6.08398C4.49379 5.61502 5.20273 5.23843 5.99219 4.94238C7.57848 4.34755 9.70276 4 12 4ZM12 6C9.87903 6 8.00346 6.32451 6.69434 6.81543C6.03626 7.06222 5.5727 7.33126 5.29199 7.58008C5.01013 7.82998 5 7.97447 5 8C5 8.02553 5.01013 8.17002 5.29199 8.41992C5.5727 8.66874 6.03626 8.93778 6.69434 9.18457C8.00346 9.67549 9.87903 10 12 10C14.121 10 15.9965 9.67549 17.3057 9.18457C17.9637 8.93778 18.4273 8.66874 18.708 8.41992C18.9899 8.17002 19 8.02553 19 8C19 7.97447 18.9899 7.82998 18.708 7.58008C18.4273 7.33126 17.9637 7.06222 17.3057 6.81543C15.9965 6.32451 14.121 6 12 6Z" fill="#374151"/>
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 4C14.2972 4 16.4215 4.34755 18.0078 4.94238C18.7973 5.23843 19.5062 5.61502 20.0352 6.08398C20.527 6.52015 20.9394 7.11055 20.9932 7.83887L23 14.9004V15.04C23 15.8285 22.4919 16.5073 21.9736 16.999C21.4138 17.5301 20.6423 18.0345 19.7285 18.4697C17.8948 19.3431 15.3605 20 12.4541 20C9.55185 19.9999 6.80672 19.3443 4.76855 18.4883C3.75243 18.0615 2.87446 17.5699 2.23145 17.0547C1.91046 16.7975 1.62045 16.5122 1.40332 16.2021C1.19108 15.899 1.00001 15.5013 1 15.04V14.8906L1.04395 14.748L3.01855 8.28906C3.00598 8.19514 3 8.09872 3 8C3 7.19722 3.43717 6.5519 3.96484 6.08398C4.49379 5.61502 5.20273 5.23843 5.99219 4.94238C7.57848 4.34755 9.70276 4 12 4ZM19.6006 10.2539C19.1422 10.5699 18.5976 10.8364 18.0078 11.0576C16.4215 11.6525 14.2972 12 12 12C9.70276 12 7.57848 11.6525 5.99219 11.0576C5.44057 10.8508 4.92929 10.603 4.49023 10.3135L3.04102 15.0527L3.04199 15.0547C3.11613 15.1606 3.25477 15.3108 3.48242 15.4932C3.93649 15.857 4.63635 16.2637 5.54297 16.6445C7.35116 17.4039 9.83383 17.9999 12.4541 18C15.0705 18 17.3099 17.4062 18.8682 16.6641C19.6501 16.2917 20.2297 15.8968 20.5967 15.5488C20.8392 15.3187 20.9342 15.1602 20.9727 15.083L19.6006 10.2539ZM12 6C9.87903 6 8.00346 6.32451 6.69434 6.81543C6.03626 7.06222 5.5727 7.33126 5.29199 7.58008C5.01013 7.82998 5 7.97447 5 8C5 8.02553 5.01013 8.17002 5.29199 8.41992C5.5727 8.66874 6.03626 8.93778 6.69434 9.18457C8.00346 9.67549 9.87903 10 12 10C14.121 10 15.9965 9.67549 17.3057 9.18457C17.9637 8.93778 18.4273 8.66874 18.708 8.41992C18.9899 8.17002 19 8.02553 19 8C19 7.97447 18.9899 7.82998 18.708 7.58008C18.4273 7.33126 17.9637 7.06222 17.3057 6.81543C15.9965 6.32451 14.121 6 12 6Z" fill="#374151"/>
     </svg>
   )
 }
@@ -157,29 +146,25 @@ function WeightIcon() {
   )
 }
 
-// ── 共通パーツ ────────────────────────────────────────────
-function Divider() {
-  return <div className="h-px bg-[#F0F0F0] -mx-4" />
+function PhotoBadgeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-text-placeholder flex-shrink-0">
+      <path d="M5 21C4.45 21 3.97917 20.8042 3.5875 20.4125C3.19583 20.0208 3 19.55 3 19V5C3 4.45 3.19583 3.97917 3.5875 3.5875C3.97917 3.19583 4.45 3 5 3H19C19.55 3 20.0208 3.19583 20.4125 3.5875C20.8042 3.97917 21 4.45 21 5V19C21 19.55 20.8042 20.0208 20.4125 20.4125C20.0208 20.8042 19.55 21 19 21H5ZM5 19H19V5H5V19ZM6 17H18L14.25 12L11.25 16L9 13L6 17ZM9.5625 9.5625C9.85417 9.27083 10 8.91667 10 8.5C10 8.08333 9.85417 7.72917 9.5625 7.4375C9.27083 7.14583 8.91667 7 8.5 7C8.08333 7 7.72917 7.14583 7.4375 7.4375C7.14583 7.72917 7 8.08333 7 8.5C7 8.91667 7.14583 9.27083 7.4375 9.5625C7.72917 9.85417 8.08333 10 8.5 10C8.91667 10 9.27083 9.85417 9.5625 9.5625Z" fill="currentColor"/>
+    </svg>
+  )
 }
 
-
+// ── 共通パーツ ────────────────────────────────────────────
 function CategoryRow({ icon, label, action }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex-shrink-0 text-[#374151]">{icon}</div>
-      <span className="flex-1 text-sm font-medium text-[#111827]">{label}</span>
+      <div className="flex-shrink-0 text-text-primary">{icon}</div>
+      <span className="flex-1 text-sm font-medium text-text-primary">{label}</span>
       {action}
     </div>
   )
 }
 
-function ActionPlus({ onClick }) {
-  return (
-    <button onClick={onClick} className="p-1 bg-transparent cursor-pointer" style={{ border: 'none' }}>
-      <PlusIcon />
-    </button>
-  )
-}
 
 function ActionChevron({ onClick }) {
   return (
@@ -190,7 +175,9 @@ function ActionChevron({ onClick }) {
 }
 
 // ── CatCareScreen ─────────────────────────────────────────
-export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
+export default function CatCareScreen({ cat, date, onBack, onGoToDashboard }) {
+  const [view, setView] = useState('main')
+
   const [weight, setWeight] = useState(() => {
     const recs = load(LS_WEIGHT).filter(r => r.catId === cat.id && r.date === date)
     if (!recs.length) return ''
@@ -198,23 +185,71 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
     return latest.weight ?? ''
   })
 
-  const age  = calcAge(cat.birthday)
-  const photo = cat.photo
-
   const lastHospitalDate = useMemo(() => getLastHospitalDate(cat.id, date), [cat.id, date])
   const foodSchedules    = useMemo(() => getActiveFoodSchedules(cat.id, date), [cat.id, date])
   const allFoods         = useMemo(() => load(LS_FOODS), [])
-  const poopRecords      = useMemo(() => getDayRecords(LS_POOP,  cat.id, date), [cat.id, date])
-  const peeRecords       = useMemo(() => getDayRecords(LS_PEE,   cat.id, date), [cat.id, date])
-  const vomitRecords     = useMemo(() => getDayRecords(LS_VOMIT, cat.id, date), [cat.id, date])
-  const lastWeight       = useMemo(() => getLastWeightRecord(cat.id, date), [cat.id, date])
+  const [poopRecords,  setPoopRecords]  = useState(() => getDayRecords(LS_POOP,  cat.id, date))
+  const [peeRecords,   setPeeRecords]   = useState(() => getDayRecords(LS_PEE,   cat.id, date))
+  const [vomitRecords, setVomitRecords] = useState(() => getDayRecords(LS_VOMIT, cat.id, date))
+  const lastWeight       = useMemo(() => getLastWeightRecord(cat.id, date),             [cat.id, date])
+  const [medRecords, setMedRecords] = useState(() => getDayRecords(LS_MEDS, cat.id, date))
+  const [suppRecords, setSuppRecords] = useState(() =>
+    getDayRecords(LS_SUPPLEMENTS, cat.id, date).filter(s => !s.stoppedDate)
+  )
+
+  const handleBackFromPill = useCallback(() => {
+    setMedRecords(getDayRecords(LS_MEDS, cat.id, date))
+    setView('main')
+  }, [cat.id, date])
+
+  const handleBackFromPoop = () => {
+    setPoopRecords(getDayRecords(LS_POOP, cat.id, date))
+    setView('main')
+  }
+
+  const handleBackFromPee = () => {
+    setPeeRecords(getDayRecords(LS_PEE, cat.id, date))
+    setView('main')
+  }
+
+  const handleBackFromVomit = () => {
+    setVomitRecords(getDayRecords(LS_VOMIT, cat.id, date))
+    setView('main')
+  }
+
+  const handleBackFromSupplement = () => {
+    setSuppRecords(getDayRecords(LS_SUPPLEMENTS, cat.id, date).filter(s => !s.stoppedDate))
+    setView('main')
+  }
+
+  if (view === 'meal') {
+    return <CatMealScreen cat={cat} date={date} onBack={() => setView('main')} />
+  }
+  if (view === 'pill') {
+    return <CatPillScreen cat={cat} date={date} onBack={handleBackFromPill} />
+  }
+  if (view === 'poop') {
+    return <CatPoopScreen cat={cat} date={date} onBack={handleBackFromPoop} />
+  }
+  if (view === 'pee') {
+    return <CatPeeScreen cat={cat} date={date} onBack={handleBackFromPee} />
+  }
+  if (view === 'vomit') {
+    return <CatVomitScreen cat={cat} date={date} onBack={handleBackFromVomit} />
+  }
+  if (view === 'supplement') {
+    return <CatSupplementScreen cat={cat} date={date} onBack={handleBackFromSupplement} />
+  }
+  if (view === 'visit') {
+    return <VisitScreen cat={cat} date={date} onBack={() => setView('main')} />
+  }
 
   return (
     <div className="h-dvh flex flex-col bg-[#F7F7F7] overflow-hidden">
 
       {/* ヘッダー */}
       <header className="flex-shrink-0 bg-white border-b border-gray-200">
-        <div className="relative flex items-center justify-center h-14 px-4">
+        <div className="relative flex items-center justify-center h-[60px] px-4">
           <button
             onClick={onBack}
             className="absolute left-4 flex items-center bg-transparent cursor-pointer p-1"
@@ -222,7 +257,7 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
           >
             <BackIcon />
           </button>
-          <span className="text-base font-semibold text-[#111827]">お世話</span>
+          <span className="text-base font-semibold text-text-primary">お世話</span>
         </div>
       </header>
 
@@ -231,30 +266,12 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
 
         {/* 猫カード */}
         <div className="px-4 pt-4 pb-3">
-          <button
-            onClick={onGoToCatsTab}
-            className="w-full bg-white rounded-2xl px-4 py-3 flex items-center gap-3 text-left cursor-pointer"
-            style={{ border: 'none' }}
-          >
-            <div className="w-11 h-11 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden flex items-center justify-center text-white font-bold text-lg">
-              {photo
-                ? <img src={photo} alt={cat.name} className="w-full h-full object-cover" />
-                : (cat.name?.[0] ?? '?')
-              }
-            </div>
-            <div className="flex-1 flex items-baseline gap-2">
-              <span className="text-base font-bold text-[#111827]">{cat.name}</span>
-              {age && (
-                <span className="text-sm font-normal text-[#111827]">{age.years}歳 {age.months}ヶ月</span>
-              )}
-            </div>
-            <ChevronRight />
-          </button>
+          <CatCard cat={cat} onClick={onGoToDashboard} className="bg-white rounded-2xl" />
         </div>
 
         {/* 日付 */}
         <div className="text-center py-2">
-          <span className="text-lg font-bold text-[#111827]">{formatDateJa(date)}</span>
+          <span className="text-lg font-bold text-text-primary">{formatDateJa(date)}</span>
         </div>
 
         {/* カテゴリカード */}
@@ -262,27 +279,27 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
 
           {/* 受診 */}
           <div className="bg-white rounded-xl overflow-hidden">
-            <div className="px-4 pt-4 pb-3">
+            <div className="px-4 py-3">
               <CategoryRow
                 icon={<HospitalIcon />}
                 label="受診"
-                action={<ActionPlus onClick={() => {/* TODO */}} />}
+                action={<ActionChevron onClick={() => setView('visit')} />}
               />
             </div>
             {lastHospitalDate && (
-              <div className="flex justify-end px-4 pt-0 pb-4">
-                <span className="text-sm font-normal text-[#374151]">前回　{formatDateSlash(lastHospitalDate)}</span>
+              <div className="flex justify-end px-4 py-3">
+                <span className="text-sm font-normal text-text-primary">前回　{formatDateSlash(lastHospitalDate)}</span>
               </div>
             )}
           </div>
 
           {/* 食事 */}
           <div className="bg-white rounded-xl overflow-hidden">
-            <div className={foodSchedules.length > 0 ? 'px-4 pt-4 pb-3' : 'px-4 py-4'}>
+            <div className="px-4 py-3">
               <CategoryRow
                 icon={<FoodIcon />}
                 label="食事"
-                action={<ActionChevron onClick={() => {/* TODO */}} />}
+                action={<ActionChevron onClick={() => setView('meal')} />}
               />
             </div>
             {foodSchedules.length > 0 && foodSchedules.map(s => {
@@ -291,18 +308,18 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
               return (
                 <div key={s.id}>
                   <div className="h-px bg-[#F0F0F0]" />
-                  <div className="flex items-center gap-2 px-4 pt-3 pb-4">
+                  <div className="flex items-center gap-2 px-4 py-3">
                     {s.time && (
-                      <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{s.time}</span>
+                      <span className="text-sm font-normal text-text-primary flex-shrink-0">{s.time}</span>
                     )}
                     {typeBadge && (
-                      <span className="text-xs font-medium bg-[#F3F4F6] text-[#374151] px-1.5 py-0.5 rounded flex-shrink-0">
+                      <span className="text-xs font-medium bg-[#F3F4F6] text-text-primary px-1.5 py-0.5 rounded flex-shrink-0">
                         {typeBadge}
                       </span>
                     )}
-                    <span className="flex-1 text-sm font-normal text-[#374151] line-clamp-2">{food?.name ?? ''}</span>
+                    <span className="flex-1 text-sm font-normal text-text-primary line-clamp-2">{food?.name ?? ''}</span>
                     {s.amount && (
-                      <span className="text-sm font-normal text-[#374151] flex-shrink-0">{s.amount} g</span>
+                      <span className="text-sm font-normal text-text-primary flex-shrink-0">{s.amount} g</span>
                     )}
                   </div>
                 </div>
@@ -312,106 +329,173 @@ export default function CatCareScreen({ cat, date, onBack, onGoToCatsTab }) {
 
           {/* 投与 */}
           <div className="bg-white rounded-xl overflow-hidden">
-            <div className="px-4 py-4">
+            <div className="px-4 py-3">
               <CategoryRow
                 icon={<PillIcon />}
                 label="投与"
-                action={<ActionChevron onClick={() => {/* TODO */}} />}
+                action={<ActionChevron onClick={() => setView('pill')} />}
               />
             </div>
+            {medRecords.map(r => (
+              <div key={r.id}>
+                <div className="h-px bg-[#F0F0F0]" />
+                <div className="flex items-center gap-2 px-4 py-3">
+                  {r.time && (
+                    <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.time}</span>
+                  )}
+                  <span className="flex-1 text-sm font-normal text-text-primary">{r.drugName ?? ''}</span>
+                  {r.amount && (
+                    <span className="text-sm font-normal text-text-primary flex-shrink-0">
+                      {r.amount}{r.unit ? ` ${r.unit}` : ''}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* 補給 */}
-          <div className="bg-white rounded-xl overflow-hidden">
-            <div className="px-4 py-4">
-              <CategoryRow
-                icon={<PillIcon />}
-                label="補給"
-                action={<ActionChevron onClick={() => {/* TODO */}} />}
-              />
-            </div>
-          </div>
+          {(() => {
+            const rows = suppRecords.filter(r => r.name)
+            return (
+              <div className="bg-white rounded-xl overflow-hidden">
+                <div className="px-4 py-3">
+                  <CategoryRow
+                    icon={<PillIcon />}
+                    label="補給"
+                    action={<ActionChevron onClick={() => setView('supplement')} />}
+                  />
+                </div>
+                {rows.map(r => (
+                  <div key={r.id}>
+                    <div className="h-px bg-[#F0F0F0]" />
+                    <div className="flex items-center gap-2 px-4 py-3">
+                      <span className="flex-1 text-sm font-normal text-text-primary">{r.name}</span>
+                      {r.dailyAmount && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">
+                          {r.dailyAmount}{r.unit ? ` ${r.unit}` : ''}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
 
           {/* うんち */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<PoopIcon />}
-              label="うんち"
-              action={<ActionPlus onClick={() => {/* TODO */}} />}
-            />
-            {poopRecords.map(r => (
-              <div key={r.id}>
-                <Divider />
-                <div className="flex items-center gap-2 py-2">
-                  {r.time && (
-                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
-                  )}
-                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
+          {(() => {
+            const rows = poopRecords.filter(r => r.time || r.condition || r.photo || r.memo)
+            return (
+              <div className="bg-white rounded-xl overflow-hidden">
+                <div className="px-4 py-3">
+                  <CategoryRow
+                    icon={<PoopIcon />}
+                    label="うんち"
+                    action={<ActionChevron onClick={() => setView('poop')} />}
+                  />
                 </div>
+                {rows.map(r => (
+                  <div key={r.id}>
+                    <div className="h-px bg-[#F0F0F0]" />
+                    <div className="flex items-center gap-2 px-4 py-3">
+                      {r.time && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.time}</span>
+                      )}
+                      <div className="flex-1" />
+                      {r.photo && <PhotoBadgeIcon />}
+                      {r.condition && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.condition}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )
+          })()}
 
           {/* おしっこ */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<PeeIcon />}
-              label="おしっこ"
-              action={<ActionPlus onClick={() => {/* TODO */}} />}
-            />
-            {peeRecords.map(r => (
-              <div key={r.id}>
-                <Divider />
-                <div className="flex items-center gap-2 py-2">
-                  {r.time && (
-                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
-                  )}
-                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
+          {(() => {
+            const rows = peeRecords.filter(r => r.time || r.condition || r.photo || r.memo)
+            return (
+              <div className="bg-white rounded-xl overflow-hidden">
+                <div className="px-4 py-3">
+                  <CategoryRow
+                    icon={<PeeIcon />}
+                    label="おしっこ"
+                    action={<ActionChevron onClick={() => setView('pee')} />}
+                  />
                 </div>
+                {rows.map(r => (
+                  <div key={r.id}>
+                    <div className="h-px bg-[#F0F0F0]" />
+                    <div className="flex items-center gap-2 px-4 py-3">
+                      {r.time && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.time}</span>
+                      )}
+                      <div className="flex-1" />
+                      {r.photo && <PhotoBadgeIcon />}
+                      {r.condition && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.condition}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )
+          })()}
 
           {/* ゲロ */}
-          <div className="bg-white rounded-xl px-4 py-4">
-            <CategoryRow
-              icon={<VomitIcon />}
-              label="ゲロ"
-              action={<ActionPlus onClick={() => {/* TODO */}} />}
-            />
-            {vomitRecords.map(r => (
-              <div key={r.id}>
-                <Divider />
-                <div className="flex items-center gap-2 py-2">
-                  {r.time && (
-                    <span className="text-xs font-normal text-[#9CA3AF] w-10 flex-shrink-0">{r.time}</span>
-                  )}
-                  <span className="flex-1 text-sm font-normal text-[#374151]">{r.condition ?? ''}</span>
+          {(() => {
+            const rows = vomitRecords.filter(r => r.time || r.condition || r.photo || r.memo)
+            return (
+              <div className="bg-white rounded-xl overflow-hidden">
+                <div className="px-4 py-3">
+                  <CategoryRow
+                    icon={<VomitIcon />}
+                    label="ゲロ"
+                    action={<ActionChevron onClick={() => setView('vomit')} />}
+                  />
                 </div>
+                {rows.map(r => (
+                  <div key={r.id}>
+                    <div className="h-px bg-[#F0F0F0]" />
+                    <div className="flex items-center gap-2 px-4 py-3">
+                      {r.time && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.time}</span>
+                      )}
+                      <div className="flex-1" />
+                      {r.photo && <PhotoBadgeIcon />}
+                      {r.condition && (
+                        <span className="text-sm font-normal text-text-primary flex-shrink-0">{r.condition}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )
+          })()}
 
           {/* 体重 */}
           <div className="bg-white rounded-xl overflow-hidden">
-            <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-              <div className="flex-shrink-0 text-[#374151]"><WeightIcon /></div>
-              <span className="flex-1 text-sm font-medium text-[#111827]">体重</span>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="flex-shrink-0 text-text-primary"><WeightIcon /></div>
+              <span className="flex-1 text-sm font-medium text-text-primary">体重</span>
               <input
                 type="number"
                 inputMode="decimal"
                 value={weight}
                 onChange={e => setWeight(e.target.value)}
                 placeholder=""
-                className="bg-[#F3F2EF] rounded-lg px-3 py-1 w-16 text-right text-sm font-normal text-[#111827] outline-none"
+                className="bg-[#F3F2EF] rounded-lg px-3 py-1 w-16 text-right text-sm font-normal text-text-primary outline-none"
               />
-              <span className="text-sm font-normal text-[#374151]">kg</span>
+              <span className="text-sm font-normal text-text-primary">kg</span>
             </div>
             {lastWeight && (
-              <div className="flex justify-end gap-3 px-4 pt-0 pb-4">
-                <span className="text-sm font-normal text-[#374151]">前回</span>
-                <span className="text-sm font-normal text-[#374151]">{formatDateSlash(lastWeight.date)}</span>
-                <span className="text-sm font-normal text-[#374151]">{lastWeight.weight} kg</span>
+              <div className="flex justify-end gap-3 px-4 py-3">
+                <span className="text-sm font-normal text-text-primary">前回</span>
+                <span className="text-sm font-normal text-text-primary">{formatDateSlash(lastWeight.date)}</span>
+                <span className="text-sm font-normal text-text-primary">{lastWeight.weight} kg</span>
               </div>
             )}
           </div>

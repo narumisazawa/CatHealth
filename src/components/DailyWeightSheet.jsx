@@ -47,7 +47,7 @@ function FormRow({ label, children, last = false }) {
         display: 'flex', alignItems: 'center',
         minHeight: 52, padding: '0 16px', gap: 12,
       }}>
-        <span style={{ fontSize: 14, color: '#111827', flexShrink: 0 }}>{label}</span>
+        <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0 }}>{label}</span>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
       </div>
       {!last && <div style={{ height: 1, background: '#F0F0F0' }} />}
@@ -130,7 +130,7 @@ export default function DailyWeightSheet({
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '90dvh',
@@ -168,7 +168,7 @@ export default function DailyWeightSheet({
               </svg>
             </button>
 
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>
+            <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>
               体重記録
             </span>
 
@@ -196,7 +196,7 @@ export default function DailyWeightSheet({
 
             {/* 体重記録ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>体重確認</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>体重確認</span>
             </div>
 
             {/* 入力カード */}
@@ -217,22 +217,23 @@ export default function DailyWeightSheet({
                       value={weight}
                       onChange={e => setWeight(e.target.value)}
                       placeholder="0.00"
+                      className="text-text-primary"
                       style={{
                         border: 'none', outline: 'none',
                         background: 'transparent',
-                        fontSize: 14, color: '#0F172A',
+                        fontSize: 14,
                         width: 64, textAlign: 'right',
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 14, color: '#9CA3AF', flexShrink: 0 }}>kg</span>
+                  <span className="text-text-placeholder" style={{ fontSize: 14, flexShrink: 0 }}>kg</span>
                 </div>
               </FormRow>
             </div>
 
             {/* 写真を撮るラベル */}
             <div style={{ padding: '8px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>写真を撮る</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>写真を撮る</span>
             </div>
 
             {/* 写真エリアカード */}
@@ -268,10 +269,11 @@ export default function DailyWeightSheet({
               <div style={{ paddingTop: 8, display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={handleDelete}
+                  className="text-primary"
                   style={{
                     height: 48, padding: '0 32px', borderRadius: 999,
                     border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-                    color: PRIMARY, fontSize: 14, fontWeight: 600,
+                    fontSize: 14, fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: 8,
                   }}

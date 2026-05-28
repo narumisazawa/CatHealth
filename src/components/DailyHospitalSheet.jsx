@@ -91,9 +91,9 @@ function SelectFormRow({ label, value, displayText, options, onChange, placehold
           display: 'flex', alignItems: 'center',
           minHeight: 52, padding: '0 16px', gap: 12,
         }}>
-          <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 56 }}>{label}</span>
+          <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 56 }}>{label}</span>
           <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 4 }}>
-            <span style={{ fontSize: 14, color: value ? '#0F172A' : '#9CA3AF' }}>
+            <span className={value ? 'text-text-primary' : 'text-text-placeholder'} style={{ fontSize: 14 }}>
               {displayText || placeholder}
             </span>
             <ExpandAllIcon />
@@ -212,7 +212,7 @@ export default function DailyHospitalSheet({
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '90dvh',
@@ -250,7 +250,7 @@ export default function DailyHospitalSheet({
               </svg>
             </button>
 
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>
+            <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>
               動物病院受診
             </span>
 
@@ -290,7 +290,7 @@ export default function DailyHospitalSheet({
                 display: 'flex', alignItems: 'center',
                 minHeight: 52, padding: '0 16px', gap: 12,
               }}>
-                <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 56 }}>受診日</span>
+                <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 56 }}>受診日</span>
                 <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                   <div style={{
                     background: '#F6F6F6', borderRadius: 15, height: 32,
@@ -300,10 +300,11 @@ export default function DailyHospitalSheet({
                       type="date"
                       value={date}
                       onChange={e => setDate(e.target.value)}
+                      className="text-text-primary"
                       style={{
                         border: 'none', outline: 'none',
                         background: 'transparent',
-                        fontSize: 14, color: '#0F172A',
+                        fontSize: 14,
                       }}
                     />
                   </div>
@@ -313,7 +314,7 @@ export default function DailyHospitalSheet({
 
             {/* 動物病院ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>動物病院</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>動物病院</span>
             </div>
 
             {/* 動物病院カード */}
@@ -331,7 +332,7 @@ export default function DailyHospitalSheet({
 
             {/* 受診内容ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>受診内容</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>受診内容</span>
             </div>
 
             {/* 受診内容カード */}
@@ -352,7 +353,7 @@ export default function DailyHospitalSheet({
                       }}
                     >
                       <Checkbox checked={checked} />
-                      <span style={{ flex: 1, fontSize: 14, color: '#0F172A' }}>{item}</span>
+                      <span className="text-text-primary" style={{ flex: 1, fontSize: 14 }}>{item}</span>
                     </button>
                     {/* その他：自由入力欄 */}
                     {item === 'その他' && checked && (
@@ -365,10 +366,11 @@ export default function DailyHospitalSheet({
                             onChange={e => setContentMemo(e.target.value)}
                             placeholder="内容を入力"
                             autoFocus
+                            className="text-text-primary"
                             style={{
                               width: '100%', boxSizing: 'border-box',
                               border: 'none', outline: 'none',
-                              fontSize: 14, color: '#0F172A',
+                              fontSize: 14,
                               background: 'transparent', padding: 0,
                             }}
                           />
@@ -382,7 +384,7 @@ export default function DailyHospitalSheet({
 
             {/* 診察結果ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>診察結果</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>診察結果</span>
             </div>
 
             {/* 診察結果カード */}
@@ -403,14 +405,14 @@ export default function DailyHospitalSheet({
                   background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left',
                 }}
               >
-                <span style={{ flex: 1, fontSize: 14, color: '#0F172A' }}>検査結果登録</span>
+                <span className="text-text-primary" style={{ flex: 1, fontSize: 14 }}>検査結果登録</span>
                 <ChevronRightIcon />
               </button>
             </div>
 
             {/* 処方ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>処方</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>処方</span>
             </div>
 
             {/* 処方カード */}
@@ -420,15 +422,16 @@ export default function DailyHospitalSheet({
                 display: 'flex', alignItems: 'center',
                 minHeight: 52, padding: '0 16px', gap: 12,
               }}>
-                <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 72 }}>薬の名前</span>
+                <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 72 }}>薬の名前</span>
                 <input
                   type="text"
                   value={prescName}
                   onChange={e => setPrescName(e.target.value)}
                   placeholder="入力してください"
+                  className="text-text-primary"
                   style={{
                     flex: 1, border: 'none', outline: 'none',
-                    fontSize: 14, color: '#0F172A', background: 'transparent',
+                    fontSize: 14, background: 'transparent',
                     textAlign: 'right',
                   }}
                 />
@@ -453,7 +456,7 @@ export default function DailyHospitalSheet({
                 display: 'flex', alignItems: 'center',
                 minHeight: 52, padding: '0 16px', gap: 12,
               }}>
-                <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 72 }}>量</span>
+                <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 72 }}>量</span>
                 <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 6 }}>
                   <div style={{
                     background: '#F6F6F6', borderRadius: 15, height: 32,
@@ -466,15 +469,16 @@ export default function DailyHospitalSheet({
                       value={prescAmount}
                       onChange={e => setPrescAmount(e.target.value)}
                       placeholder="0"
+                      className="text-text-primary"
                       style={{
                         border: 'none', outline: 'none',
                         background: 'transparent',
-                        fontSize: 14, color: '#0F172A',
+                        fontSize: 14,
                         width: 56, textAlign: 'right',
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 14, color: '#9CA3AF', flexShrink: 0 }}>ml</span>
+                  <span className="text-text-placeholder" style={{ fontSize: 14, flexShrink: 0 }}>ml</span>
                 </div>
               </div>
 
@@ -483,15 +487,16 @@ export default function DailyHospitalSheet({
               {/* メモ */}
               <div style={{ padding: '12px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                  <span style={{ fontSize: 14, color: '#111827', flexShrink: 0, width: 72, paddingTop: 2 }}>メモ</span>
+                  <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0, width: 72, paddingTop: 2 }}>メモ</span>
                   <textarea
                     value={prescMemo}
                     onChange={e => setPrescMemo(e.target.value)}
                     placeholder="入力してください"
                     rows={2}
+                    className="text-text-primary"
                     style={{
                       flex: 1, border: 'none', outline: 'none', resize: 'none',
-                      fontSize: 14, color: '#0F172A', lineHeight: 1.6,
+                      fontSize: 14, lineHeight: 1.6,
                       background: 'transparent', padding: 0,
                     }}
                   />
@@ -501,7 +506,7 @@ export default function DailyHospitalSheet({
 
             {/* メモラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>メモ</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>メモ</span>
             </div>
 
             {/* メモカード */}
@@ -511,10 +516,11 @@ export default function DailyHospitalSheet({
                 onChange={e => setMemo(e.target.value)}
                 placeholder="メモを入力"
                 rows={3}
+                className="text-text-primary"
                 style={{
                   width: '100%', boxSizing: 'border-box',
                   border: 'none', outline: 'none', resize: 'none',
-                  fontSize: 14, color: '#0F172A', lineHeight: 1.6,
+                  fontSize: 14, lineHeight: 1.6,
                   background: 'transparent', padding: 0,
                 }}
               />
@@ -525,10 +531,11 @@ export default function DailyHospitalSheet({
               <div style={{ paddingTop: 8, display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={handleDelete}
+                  className="text-primary"
                   style={{
                     height: 48, padding: '0 32px', borderRadius: 999,
                     border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-                    color: PRIMARY, fontSize: 14, fontWeight: 600,
+                    fontSize: 14, fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: 8,
                   }}

@@ -72,14 +72,14 @@ function ExpandIcon() {
 // ── 共通スタイル ─────────────────────────────────────────
 const inputStyle = {
   border: 'none', outline: 'none',
-  fontSize: 14, color: '#111827',
+  fontSize: 14,
   background: 'transparent', padding: 0,
   width: '100%',
 }
 
 const numInputStyle = {
   border: 'none', outline: 'none',
-  fontSize: 14, color: '#111827',
+  fontSize: 14,
   background: 'transparent', padding: 0,
   textAlign: 'right', width: '80px',
 }
@@ -89,7 +89,7 @@ function FormRow({ label, children, last = false }) {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', minHeight: 52, padding: '0 16px', gap: 12 }}>
-        <span style={{ width: 100, fontSize: 14, color: '#111827', flexShrink: 0 }}>{label}</span>
+        <span className="text-text-primary" style={{ width: 100, fontSize: 14, flexShrink: 0 }}>{label}</span>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>{children}</div>
       </div>
       {!last && <div style={{ height: 1, background: '#F0F0F0' }} />}
@@ -101,7 +101,7 @@ function FormRow({ label, children, last = false }) {
 function SelectRow({ value, onChange, placeholder, options }) {
   return (
     <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
-      <span style={{ flex: 1, fontSize: 14, color: value ? '#111827' : '#9CA3AF', pointerEvents: 'none' }}>
+      <span className={value ? 'text-text-primary' : 'text-text-placeholder'} style={{ flex: 1, fontSize: 14, pointerEvents: 'none' }}>
         {value || placeholder}
       </span>
       <span style={{ pointerEvents: 'none' }}><ExpandIcon /></span>
@@ -124,7 +124,7 @@ function NutritionRow({ label, unit, value, onChange, last = false }) {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', height: 50, padding: '0 24px', gap: 24 }}>
-        <span style={{ flex: 1, fontSize: 14, color: '#0F172A' }}>{label}</span>
+        <span className="text-text-primary" style={{ flex: 1, fontSize: 14 }}>{label}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
           {/* 入力ピル */}
           <div style={{
@@ -140,9 +140,10 @@ function NutritionRow({ label, unit, value, onChange, last = false }) {
               value={value}
               onChange={e => onChange(e.target.value)}
               placeholder="—"
+              className="text-text-primary"
               style={{
                 border: 'none', outline: 'none',
-                fontSize: 14, color: '#0F172A',
+                fontSize: 14,
                 background: 'transparent', padding: 0,
                 textAlign: 'right', width: '100%',
               }}
@@ -151,7 +152,7 @@ function NutritionRow({ label, unit, value, onChange, last = false }) {
           {/* 単位（42px 固定幅） */}
           <div style={{ width: 42, flexShrink: 0 }}>
             {unit && (
-              <span style={{ fontSize: 12, fontWeight: 'normal', color: '#0F172A' }}>{unit}</span>
+              <span className="text-text-primary" style={{ fontSize: 12, fontWeight: 'normal' }}>{unit}</span>
             )}
           </div>
         </div>
@@ -316,10 +317,11 @@ export default function FoodFormModal({ onSave, onClose, initialFood = null }) {
           </div>
           <button
             onClick={() => fileRef.current?.click()}
+            className="text-primary"
             style={{
               padding: '6px 24px', borderRadius: 999,
               border: `1.5px solid ${PRIMARY}`, background: 'transparent',
-              color: PRIMARY, fontSize: 13, fontWeight: 600,
+              fontSize: 13, fontWeight: 600,
               cursor: 'pointer',
             }}
           >
@@ -341,6 +343,7 @@ export default function FoodFormModal({ onSave, onClose, initialFood = null }) {
 
           <FormRow label="メーカー">
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={maker}
               onChange={e => setMaker(e.target.value)}
@@ -359,6 +362,7 @@ export default function FoodFormModal({ onSave, onClose, initialFood = null }) {
 
           <FormRow label="フード名" last>
             <input
+              className="text-text-primary"
               style={inputStyle}
               value={name}
               onChange={e => setName(e.target.value)}
@@ -369,7 +373,7 @@ export default function FoodFormModal({ onSave, onClose, initialFood = null }) {
 
         {/* 栄養成分ラベル（カード外） */}
         <div style={{ padding: '0 16px 8px' }}>
-          <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>栄養成分</span>
+          <span className="text-text-secondary" style={{ fontSize: 12 }}>栄養成分</span>
         </div>
 
         {/* 栄養成分カード */}

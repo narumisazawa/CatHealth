@@ -71,7 +71,7 @@ function FormRow({ label, children, last = false }) {
         display: 'flex', alignItems: 'center',
         minHeight: 52, padding: '0 16px', gap: 12,
       }}>
-        <span style={{ fontSize: 14, color: '#111827', flexShrink: 0 }}>{label}</span>
+        <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0 }}>{label}</span>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
       </div>
       {!last && <div style={{ height: 1, background: '#F0F0F0' }} />}
@@ -159,7 +159,7 @@ export default function DailyPeeSheet({
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 375,
+          width: '100%', maxWidth: 430,
           background: '#F7F7F7',
           borderRadius: '20px 20px 0 0',
           maxHeight: '90dvh',
@@ -197,7 +197,7 @@ export default function DailyPeeSheet({
               </svg>
             </button>
 
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>
+            <span className="text-text-primary" style={{ fontSize: 16, fontWeight: 700 }}>
               おしっこ記録
             </span>
 
@@ -222,7 +222,7 @@ export default function DailyPeeSheet({
 
             {/* おしっこ確認ラベル */}
             <div style={{ padding: '4px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>おしっこ確認</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>おしっこ確認</span>
             </div>
 
             {/* 入力カード */}
@@ -238,10 +238,11 @@ export default function DailyPeeSheet({
                     type="time"
                     value={time}
                     onChange={e => setTime(e.target.value)}
+                    className="text-text-primary"
                     style={{
                       border: 'none', outline: 'none',
                       background: 'transparent',
-                      fontSize: 14, color: '#0F172A',
+                      fontSize: 14,
                       width: 70,
                     }}
                   />
@@ -254,9 +255,9 @@ export default function DailyPeeSheet({
                   display: 'flex', alignItems: 'center',
                   minHeight: 52, padding: '0 16px', gap: 12,
                 }}>
-                  <span style={{ fontSize: 14, color: '#111827', flexShrink: 0 }}>状態</span>
+                  <span className="text-text-primary" style={{ fontSize: 14, flexShrink: 0 }}>状態</span>
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 4 }}>
-                    <span style={{ fontSize: 14, color: '#0F172A' }}>
+                    <span className="text-text-primary" style={{ fontSize: 14 }}>
                       {condition === 'other'
                         ? 'その他（自由入力）'
                         : CONDITION_OPTIONS.find(o => o.value === condition)?.label ?? condition}
@@ -289,10 +290,11 @@ export default function DailyPeeSheet({
                       onChange={e => setCustomCondition(e.target.value)}
                       placeholder="状態を入力"
                       autoFocus
+                      className="text-text-primary"
                       style={{
                         width: '100%', boxSizing: 'border-box',
                         border: 'none', outline: 'none',
-                        fontSize: 14, color: '#0F172A',
+                        fontSize: 14,
                         background: 'transparent', padding: 0,
                       }}
                     />
@@ -303,7 +305,7 @@ export default function DailyPeeSheet({
 
             {/* 写真を撮るラベル */}
             <div style={{ padding: '8px 4px 2px' }}>
-              <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.7)' }}>写真を撮る</span>
+              <span className="text-text-secondary" style={{ fontSize: 12 }}>写真を撮る</span>
             </div>
 
             {/* 写真エリアカード */}
@@ -339,10 +341,11 @@ export default function DailyPeeSheet({
               <div style={{ paddingTop: 8, display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={handleDelete}
+                  className="text-primary"
                   style={{
                     height: 48, padding: '0 32px', borderRadius: 999,
                     border: `1.5px solid ${PRIMARY}`, background: '#FFFFFF',
-                    color: PRIMARY, fontSize: 14, fontWeight: 600,
+                    fontSize: 14, fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: 8,
                   }}
